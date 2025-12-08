@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 import numpy as np
 
+
 #--------------------- define graph class ---------------------
 
 class Graph:
