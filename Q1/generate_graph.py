@@ -26,3 +26,10 @@ class Graph:
         G = nx.grid_graph(dim=[range(Lx), range(Ly), range(Lz)], periodic=PERIODIC)
         pos = {n: np.array(n) for n in G.nodes()}
         return G, pos
+
+    @staticmethod
+    def random_network(N, k_avg):
+        p = k_avg / (N - 1)
+        G = nx.erdos_renyi_graph(N, p)
+        pos = nx.spring_layout(G, seed=42)
+        return G, pos
