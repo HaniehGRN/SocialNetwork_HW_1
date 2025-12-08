@@ -3,6 +3,7 @@
 from generate_graph import Graph
 import numpy as np
 import networkx as nx
+import math
 
 #--------------------- define parameters ---------------------
 
@@ -53,11 +54,19 @@ def calculate_average_distance_per_node_num_ring_lattice(G, node_num, graph_samp
     average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample_size))
 
 def calculate_average_distance_per_node_num_square_lattice(G, node_num, graph_sample_size):
-    Lx, Ly = (node_num // 3), (node_num - (node_num // 3))
+    Lx = int(math.floor(math.sqrt(node_num)))
+    Ly = int(math.ceil(node_num / Lx))
     G_square_lattice, pos = G.square_lattice(Lx, Ly)
     average_distance["d_square_lattice"].append(calculate_average_shortest_path(G_square_lattice, graph_sample_size))
 
+def calculate_average_distance_per_node_num_cubic_lattice(G, node_num, graph_sample_size):
+    Lx = int(node_num ** (1 / 3))
+    Ly = int(math.sqrt(node_num / Lx))
+    Lz = int(math.ceil(node_num / (Lx * Ly)))
+    G_cubic_lattice = G.cubic_lattice(Lx, Ly, Lz)
+    average_distance["d_cubic_lattice"].append(calculate_average_shortest_path(G_cubic_lattice, graph_sample_size))
 
+def calculate_average_distance_per_node_num_random_network(G, node_num, graph_sample_size):
 
 
 #--------------------- generate N logarithmically ---------------------
