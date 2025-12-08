@@ -20,3 +20,9 @@ class Graph:
         G = nx.grid_2d_graph(Lx, Ly, periodic=True)
         pos = {(i, j): np.array([i, j]) for i, j in G.nodes()}
         return G, pos
+
+    @staticmethod
+    def cubic_grid_Lattice(Lx, Ly, Lz, PERIODIC):
+        G = nx.grid_graph(dim=[range(Lx), range(Ly), range(Lz)], periodic=PERIODIC)
+        pos = {n: np.array(n) for n in G.nodes()}
+        return G, pos
