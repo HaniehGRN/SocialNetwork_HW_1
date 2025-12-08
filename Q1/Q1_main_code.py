@@ -30,6 +30,8 @@ def calculate_average_shortest_path(G, shortest_path_sample):
     N = giant_component.number_of_nodes()
     if N == 0:
         return np.nan
+    if N < shortest_path_sample:
+        shortest_path_sample = N
 
     nodes = list(giant_component.nodes())
     sources = np.random.choice(nodes, size=shortest_path_sample, replace=False)
@@ -66,8 +68,9 @@ def calculate_average_distance_per_node_num_cubic_lattice(G, node_num, graph_sam
     G_cubic_lattice = G.cubic_lattice(Lx, Ly, Lz)
     average_distance["d_cubic_lattice"].append(calculate_average_shortest_path(G_cubic_lattice, graph_sample_size))
 
-def calculate_average_distance_per_node_num_random_network(G, node_num, graph_sample_size):
-
+def calculate_average_distance_per_node_num_random_network(G, node_num, graph_sample_size, k_avg):
+    G_random_network = G.random_network(node_num, k_avg)
+    average_distance["d_random_network"].append(calculate_average_shortest_path(G_random_network, graph_sample_size))
 
 #--------------------- generate N logarithmically ---------------------
 
