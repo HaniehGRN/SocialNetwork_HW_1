@@ -10,6 +10,7 @@ import numpy as np
 
 class Graph:
 
+    @staticmethod
     def ring_lattice(N, k=2):
         G = nx.watts_strogatz_graph(N, k, p=0) # p=0 not to rewire
         pos = nx.circular_layout(G)
@@ -30,6 +31,7 @@ class Graph:
     @staticmethod
     def random_network(N, k_avg):
         p = k_avg / (N - 1)
-        G = nx.erdos_renyi_graph(N, p)
+        G = nx.fast_gnp_random_graph(N, p, directed=False)
+        # is_connected = nx.is_connected(G)
         pos = nx.spring_layout(G, seed=42)
         return G, pos
