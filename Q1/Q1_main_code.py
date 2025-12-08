@@ -48,10 +48,14 @@ def calculate_average_shortest_path(G, shortest_path_sample):
     average_shortest_path_length = total_distance / total_paths
     return average_shortest_path_length
 
-def calculate_average_distance_per_node_num_ring_lattice(G, node_num):
-    graph_sample = 0.7 * node_num  # to keep runtime low
-    G_ring_lattice, pos = graph_sample.ring_lattice(node_num)
-    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample))
+def calculate_average_distance_per_node_num_ring_lattice(G, node_num, graph_sample_size):
+    G_ring_lattice, pos = G.ring_lattice(node_num)
+    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample_size))
+
+def calculate_average_distance_per_node_num_square_lattice(G, node_num, graph_sample_size):
+    Lx, Ly = (node_num // 3), (node_num - (node_num // 3))
+    G_square_lattice, pos = G.square_lattice(Lx, Ly)
+    average_distance["d_square_lattice"].append(calculate_average_shortest_path(G_square_lattice, graph_sample_size))
 
 
 
@@ -69,9 +73,9 @@ graph_sample = Graph()
 # print(calculate_average_shortest_path(G, sample_size=200))
 
 for node_num in node_num_vector:
-
+    graph_sample_size = 0.7 * node_num  # to keep runtime low
     G_ring_lattice, pos = graph_sample.ring_lattice(node_num)
-    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample))
+    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample_size))
 
 
 
