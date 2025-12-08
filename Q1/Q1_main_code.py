@@ -6,23 +6,22 @@ import networkx as nx
 
 #--------------------- define parameters ---------------------
 
-# G1, pos1 = Graph.ring_lattice(1000, 2)
 start_node_num = 500
 end_node_num = 5000
 point_num = 200
 
-#--------------------- generate N logarithmically ---------------------
+#--------------------- define variables ---------------------
 
-node_num_vector = np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), point_num))).astype(int)
-# print(f"Testing N values (log base 10): {node_num_vector}")
+average_distance = {
+    "d_ring_lattice" : [],
+    "d_square_lattice" : [],
+    "d_cubic_lattice" : [],
+    "d_random_network": []
+}
 
-graph = Graph()
-G, pos = graph.random_network(2000, 4)
-# G, pos = graph.ring_lattice(1000, 2)
-# G, pos = graph.square_Lattice(100, 20)
-# G, pos = graph.cubic_grid_Lattice(10, 20, 30, False)
+#--------------------- define functions ---------------------
 
-def calculate_shortest_path(G, shortest_path_sample):
+def calculate_average_shortest_path(G, shortest_path_sample):
 
     # ensure calculating shortest path on a connected graph
     largest_cc_nodes = max(nx.connected_components(G), key=len)
@@ -49,8 +48,31 @@ def calculate_shortest_path(G, shortest_path_sample):
     average_shortest_path_length = total_distance / total_paths
     return average_shortest_path_length
 
+def calculate_average_distance_per_node_num_ring_lattice(G, node_num):
+    graph_sample = 0.7 * node_num  # to keep runtime low
+    G_ring_lattice, pos = graph_sample.ring_lattice(node_num)
+    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample))
 
-print(calculate_shortest_path(G, 400))
+
+
+
+#--------------------- generate N logarithmically ---------------------
+
+node_num_vector = np.sort(np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), point_num))).astype(int))
+print(f"Testing N values (log base 10): {node_num_vector}")
+
+graph_sample = Graph()
+# G, pos = graph.random_network(2000, 4)
+# # G, pos = graph.ring_lattice(1000, 2)
+# # G, pos = graph.square_Lattice(100, 20)
+# # G, pos = graph.cubic_grid_Lattice(10, 20, 30, False)
+# print(calculate_average_shortest_path(G, sample_size=200))
+
+for node_num in node_num_vector:
+
+    G_ring_lattice, pos = graph_sample.ring_lattice(node_num)
+    average_distance["d_ring_lattice"].append(calculate_average_shortest_path(G_ring_lattice, graph_sample))
+
 
 
 
