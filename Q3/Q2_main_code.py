@@ -61,8 +61,8 @@ nx.draw(
     edge_color="gray",
     node_color="skyblue",
 )
-plt.title(f"Erdos-Rényi Random Graph")
-plt.show()
+# plt.title(f"Erdos-Rényi Random Graph")
+# plt.show()
 
 connected_components = identify_connected_components(G)
 giant_component = get_giant_component(G)
@@ -71,6 +71,18 @@ S = get_relative_giant_component_size(giant_component_size, N)
 # get_average_size_non_giant_clusters(giant_component, connected_components)
 # print(S)
 print(connected_components, giant_component)
+
+nx.draw(
+    giant_component,
+    pos,
+    with_labels=False,           # Don't show node labels for clarity
+    node_size=50,                # Smaller nodes
+    width=0.5,                   # Thinner edges
+    edge_color="black",
+    node_color="red",
+)
+# plt.title(f"Erdos-Rényi Random Graph")
+plt.show()
 
 
 
