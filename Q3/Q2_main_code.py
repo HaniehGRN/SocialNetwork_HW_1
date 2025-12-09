@@ -43,7 +43,7 @@ def get_relative_giant_component_size(giant_component_size, N):
     S = NG / N
     return S
 
-def get_small_clusters(G, giant_component):
+def get_small_clusters_subgraph(G, giant_component):
     all_nodes = set(G.nodes)
     remaining_nodes = all_nodes.difference(giant_component)
     remaining_nodes_subgraph = G.subgraph(remaining_nodes)
@@ -100,74 +100,27 @@ def plot_components(G, pos, giant_component, small_clusters):
     plt.tight_layout()
     plt.show()
 
-def get_average_size_non_giant_clusters(G, pos, giant_component, connected_components):
-    # get_small_clusters(G, giant_component)
-    # print("Remaining nodes: ", remaining_nodes)
-
-    plt.figure(figsize=(9, 4))
-    plt.subplot(1, 2, 1)
-    nx.draw(
-        giant_component,
-        pos,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=50,  # Smaller nodes
-        width=0.5,  # Thinner edges
-        edge_color="black",
-        node_color="red",
-    )
-    plt.subplot(1, 2, 2)
-    nx.draw(
-        remaining_nodes,
-        pos,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=50,  # Smaller nodes
-        width=0.5,  # Thinner edges
-        edge_color="black",
-        node_color="red",
-    )
-    plt.tight_layout()
-    plt.show()
-    # print(temp)
-    # print(temp2)
+def get_average_size_small_clusters(small_clusters_subgraph):
+    small_clusters = identify_connected_components(small_clusters_subgraph)
+    average_size_small_clusters = np.average([len(small_cluster) for small_cluster in small_clusters])
+    print("Average size of small clusters: ", average_size_small_clusters)
 
 instance_graph = Graph()
 # for k in range(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_region):
-k = 0.6
+k = 4
 
 # plot the graph
+g
+for i in range(50):
+    G, pos = Graph.random_network(N, k)
+    connected_components = identify_connected_components(G)
+    giant_component = get_giant_component(G)
+    giant_component_size = giant_component.number_of_nodes()
+    S_relative_giant_component_size = get_relative_giant_component_size(giant_component_size, N)
+    small_clusters_subgraph = get_small_clusters_subgraph(G, giant_component)
+    s_average_size_small_clusters = get_average_size_small_clusters(small_clusters_subgraph)
 
-G, pos = Graph.random_network(N, k)
-# plt1 = plt.figure(figsize=(4.5, 4.5))
-# nx.draw(
-#     G,
-#     pos,
-#     with_labels=False,           # Don't show node labels for clarity
-#     node_size=50,                # Smaller nodes
-#     width=0.5,                   # Thinner edges
-#     edge_color="gray",
-#     node_color="skyblue",
-# )
-connected_components = identify_connected_components(G)
-giant_component = get_giant_component(G)
-giant_component_size = giant_component.number_of_nodes()
-S = get_relative_giant_component_size(giant_component_size, N)
-small_clusters = get_small_clusters(G, giant_component)
-plot_components(G, pos, giant_component, small_clusters)
-# nx.draw(
-#     giant_component,
-#     pos,
-#     with_labels=False,           # Don't show node labels for clarity
-#     node_size=50,                # Smaller nodes
-#     width=0.5,                   # Thinner edges
-#     edge_color="black",
-#     node_color="red",
-# )
-# # plt1.title(f"Erdos-Rényi Random Graph")
-# plt1.show()
-# get_average_size_non_giant_clusters(G, pos, giant_component, connected_components)
-# # print(S)
-# # print(nx.nodes(connected_components), nx.nodes(giant_component))
-#
+# plot_components(G, pos, giant_component, small_clusters)
 
 
 
