@@ -99,70 +99,70 @@ instance_graph = Graph()
 
 #--------------------- log of N & <d> ---------------------
 
-base_10_log1 = np.log10(average_distance_ring_lattice)
-base_10_log2 = np.log10(average_distance_square_lattice)
-base_10_log3 = np.log10(average_distance_cubic_lattice)
-base_10_log4 = np.log10(average_distance_random_network)
-base_10_log5 = np.log10(node_num_vector)
+# base_10_log1 = np.log10(average_distance_ring_lattice)
+# base_10_log2 = np.log10(average_distance_square_lattice)
+# base_10_log3 = np.log10(average_distance_cubic_lattice)
+# base_10_log4 = np.log10(average_distance_random_network)
+# base_10_log5 = np.log10(node_num_vector)
 
 #--------------------- plot graphs ---------------------
 
-fig1, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
-
-ax1.plot(node_num_vector, average_distance_ring_lattice, color="black")
-ax1.plot(node_num_vector, average_distance_square_lattice, color="blue")
-ax1.plot(node_num_vector, average_distance_cubic_lattice, color="green")
-ax1.plot(node_num_vector, average_distance_random_network, color="red")
-ax2.plot(base_10_log5, base_10_log1, color="black")
-ax2.plot(base_10_log5, base_10_log2, color="blue")
-ax2.plot(base_10_log5, base_10_log3, color="green")
-ax2.plot(base_10_log5, base_10_log4, color="red")
+# fig1, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+#
+# ax1.plot(node_num_vector, average_distance_ring_lattice, color="black")
+# ax1.plot(node_num_vector, average_distance_square_lattice, color="blue")
+# ax1.plot(node_num_vector, average_distance_cubic_lattice, color="green")
+# ax1.plot(node_num_vector, average_distance_random_network, color="red")
+# ax2.plot(base_10_log5, base_10_log1, color="black")
+# ax2.plot(base_10_log5, base_10_log2, color="blue")
+# ax2.plot(base_10_log5, base_10_log3, color="green")
+# ax2.plot(base_10_log5, base_10_log4, color="red")
 plt.show()
 
 #--------------------- fit linear regression model on each curve ---------------------
 
-base_10_log5 = base_10_log5.reshape(-1, 1)
-
-model1 = LinearRegression()
-model2 = LinearRegression()
-model3 = LinearRegression()
-model4 = LinearRegression()
-
-model1.fit(base_10_log5, base_10_log1)
-model2.fit(base_10_log5, base_10_log2)
-model3.fit(base_10_log5, base_10_log3)
-model4.fit(base_10_log5, base_10_log4)
+# base_10_log5 = base_10_log5.reshape(-1, 1)
+#
+# model1 = LinearRegression()
+# model2 = LinearRegression()
+# model3 = LinearRegression()
+# model4 = LinearRegression()
+#
+# model1.fit(base_10_log5, base_10_log1)
+# model2.fit(base_10_log5, base_10_log2)
+# model3.fit(base_10_log5, base_10_log3)
+# model4.fit(base_10_log5, base_10_log4)
 
 #--------------------- extract scaling exponent ---------------------
 
-slope = model1.coef_[0]
-intercept = model1.intercept_
-print(f"Slope (coefficient): {slope}")
-print(f"Intercept: {intercept}")
-
-slope = model2.coef_[0]
-intercept = model2.intercept_
-print(f"Slope (coefficient): {slope}")
-print(f"Intercept: {intercept}")
-
-slope = model3.coef_[0]
-intercept = model3.intercept_
-print(f"Slope (coefficient): {slope}")
-print(f"Intercept: {intercept}")
-
-slope = model4.coef_[0]
-intercept = model4.intercept_
-print(f"Slope (coefficient): {slope}")
-print(f"Intercept: {intercept}")
+# slope = model1.coef_[0]
+# intercept = model1.intercept_
+# print(f"Slope (coefficient): {slope}")
+# print(f"Intercept: {intercept}")
+#
+# slope = model2.coef_[0]
+# intercept = model2.intercept_
+# print(f"Slope (coefficient): {slope}")
+# print(f"Intercept: {intercept}")
+#
+# slope = model3.coef_[0]
+# intercept = model3.intercept_
+# print(f"Slope (coefficient): {slope}")
+# print(f"Intercept: {intercept}")
+#
+# slope = model4.coef_[0]
+# intercept = model4.intercept_
+# print(f"Slope (coefficient): {slope}")
+# print(f"Intercept: {intercept}")
 
 #--------------------- compare the simulated <d> with the theoretical predictions ---------------------
 
-sqrt_node_num_vector = np.sqrt(node_num_vector)
-print(f'sqrt N : {sqrt_node_num_vector}\n,<d> : {average_distance_square_lattice}')
-
-sqrt3_node_num_vector = np.pow(node_num_vector, (1/3))
-print(f'N^1/3 : {sqrt3_node_num_vector}\n,<d> : {average_distance_cubic_lattice}')
-
-ln_node_num_vector = np.log(node_num_vector)
-print(f'lnN : {ln_node_num_vector}\n,<d> : {average_distance_random_network}')
+# sqrt_node_num_vector = np.sqrt(node_num_vector)
+# print(f'sqrt N : {sqrt_node_num_vector}\n,<d> : {average_distance_square_lattice}')
+#
+# sqrt3_node_num_vector = np.pow(node_num_vector, (1/3))
+# print(f'N^1/3 : {sqrt3_node_num_vector}\n,<d> : {average_distance_cubic_lattice}')
+#
+# ln_node_num_vector = np.log(node_num_vector)
+# print(f'lnN : {ln_node_num_vector}\n,<d> : {average_distance_random_network}')
 
