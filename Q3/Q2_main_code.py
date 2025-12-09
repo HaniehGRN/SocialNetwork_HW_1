@@ -43,15 +43,67 @@ def get_relative_giant_component_size(giant_component_size, N):
     S = NG / N
     return S
 
+def get_small_clusters(G, giant_component):
+    all_nodes = set(G.nodes)
+    remaining_nodes = all_nodes.difference(giant_component)
+    remaining_nodes_subgraph = G.subgraph(remaining_nodes)
+    return remaining_nodes_subgraph
+
+def plot_components(G, pos, giant_component, small_clusters):
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 6))
+    nx.draw(
+        G,
+        pos,
+        ax=ax1,
+        with_labels=False,  # Don't show node labels for clarity
+        node_size=30,  # Smaller nodes
+        width=0.5,  # Thinner edges
+        edge_color="gray",
+        node_color="skyblue",
+    )
+    nx.draw(
+        giant_component,
+        pos,
+        ax=ax1,
+        with_labels=False,  # Don't show node labels for clarity
+        node_size=30,  # Smaller nodes
+        width=0.5,  # Thinner edges
+        edge_color="black",
+        node_color="red",
+    )
+    ax1.set_title("Erdo ̋s-Re ́nyi graph G(N, p)", fontsize=10)
+    ax1.set_aspect('equal', adjustable='box')
+    nx.draw(
+        giant_component,
+        pos,
+        ax=ax2,
+        with_labels=False,  # Don't show node labels for clarity
+        node_size=30,  # Smaller nodes
+        width=0.5,  # Thinner edges
+        edge_color="black",
+        node_color="red",
+    )
+    ax2.set_title("Giant Component of G(N, p)", fontsize=10)
+    ax2.set_aspect('equal', adjustable='box')
+    nx.draw(
+        small_clusters,
+        pos,
+        ax=ax3,
+        with_labels=False,  # Don't show node labels for clarity
+        node_size=30,  # Smaller nodes
+        width=0.5,  # Thinner edges
+        edge_color="black",
+        node_color="red",
+    )
+    ax3.set_title("Small Clusters of G(N, p)", fontsize=10)
+    ax3.set_aspect('equal', adjustable='box')
+    plt.tight_layout()
+    plt.show()
+
 def get_average_size_non_giant_clusters(G, pos, giant_component, connected_components):
-    # for connected_component in connected_components:
-    #     print(connected_component)
-    temp = [sorted(list(connected_component)) for connected_component in connected_components]
-    print(giant_component.nodes())
-    print(temp)
-    temp2 = temp.remove(sorted(giant_component.nodes()))
-    print(connected_components)
-    temp2 = G.subgraph(temp2)
+    # get_small_clusters(G, giant_component)
+    # print("Remaining nodes: ", remaining_nodes)
+
     plt.figure(figsize=(9, 4))
     plt.subplot(1, 2, 1)
     nx.draw(
@@ -65,7 +117,7 @@ def get_average_size_non_giant_clusters(G, pos, giant_component, connected_compo
     )
     plt.subplot(1, 2, 2)
     nx.draw(
-        temp2,
+        remaining_nodes,
         pos,
         with_labels=False,  # Don't show node labels for clarity
         node_size=50,  # Smaller nodes
@@ -80,39 +132,41 @@ def get_average_size_non_giant_clusters(G, pos, giant_component, connected_compo
 
 instance_graph = Graph()
 # for k in range(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_region):
-k = 3.6
+k = 0.6
 
 # plot the graph
 
 G, pos = Graph.random_network(N, k)
-plt1 = plt.figure(figsize=(9, 4))
-nx.draw(
-    G,
-    pos,
-    with_labels=False,           # Don't show node labels for clarity
-    node_size=50,                # Smaller nodes
-    width=0.5,                   # Thinner edges
-    edge_color="gray",
-    node_color="skyblue",
-)
+# plt1 = plt.figure(figsize=(4.5, 4.5))
+# nx.draw(
+#     G,
+#     pos,
+#     with_labels=False,           # Don't show node labels for clarity
+#     node_size=50,                # Smaller nodes
+#     width=0.5,                   # Thinner edges
+#     edge_color="gray",
+#     node_color="skyblue",
+# )
 connected_components = identify_connected_components(G)
 giant_component = get_giant_component(G)
 giant_component_size = giant_component.number_of_nodes()
 S = get_relative_giant_component_size(giant_component_size, N)
-nx.draw(
-    giant_component,
-    pos,
-    with_labels=False,           # Don't show node labels for clarity
-    node_size=50,                # Smaller nodes
-    width=0.5,                   # Thinner edges
-    edge_color="black",
-    node_color="red",
-)
-# plt1.title(f"Erdos-Rényi Random Graph")
-plt1.show()
-get_average_size_non_giant_clusters(G, pos, giant_component, connected_components)
-# print(S)
-# print(nx.nodes(connected_components), nx.nodes(giant_component))
+small_clusters = get_small_clusters(G, giant_component)
+plot_components(G, pos, giant_component, small_clusters)
+# nx.draw(
+#     giant_component,
+#     pos,
+#     with_labels=False,           # Don't show node labels for clarity
+#     node_size=50,                # Smaller nodes
+#     width=0.5,                   # Thinner edges
+#     edge_color="black",
+#     node_color="red",
+# )
+# # plt1.title(f"Erdos-Rényi Random Graph")
+# plt1.show()
+# get_average_size_non_giant_clusters(G, pos, giant_component, connected_components)
+# # print(S)
+# # print(nx.nodes(connected_components), nx.nodes(giant_component))
 #
 
 
