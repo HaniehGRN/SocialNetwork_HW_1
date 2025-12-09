@@ -30,22 +30,32 @@ def identify_connected_components(G):
     connected_components = nx.connected_components(G)
     return connected_components
 
-def get_relative_giant_component_size(connected_components, N):
-    giant_component_nodes = max(nx.connected_components(G), key=len) # Get the iterator of all connected components (sets of nodes)
-    # giant_component = G.subgraph(giant_component_nodes).copy()
+def get_giant_component(G):
+    giant_component_nodes = max(nx.connected_components(G), key=len)  # Get the iterator of all connected components (sets of nodes)
+    giant_component = G.subgraph(giant_component_nodes).copy()
+    return giant_component
+
+def get_relative_giant_component_size(giant_component_size, N):
+    # giant_component = get_giant_component(G)
     # NG = giant_component.number_of_nodes()
-    NG = len(giant_component_nodes)
+    NG = giant_component_size
     S = NG / N
     return S
 
-def get_average_size_non_giant_clusters():
-
+def get_average_size_non_giant_clusters(giant_component, connected_components):
+    print(giant_component, connected_components)
 
 instance_graph = Graph()
-for k in range(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_region):
-    G, pos = Graph.random_network(N, k)
-    connected_components = identify_connected_components(G)
-    S = get_relative_giant_component_size(connected_components, N)
+# for k in range(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_region):
+G, pos = Graph.random_network(N, k)
+connected_components = identify_connected_components(G)
+giant_component = get_giant_component(G)
+giant_component_size = giant_component.number_of_nodes()
+S = get_relative_giant_component_size(giant_component_size, N)
+get_average_size_non_giant_clusters(giant_component, connected_components)
+print(S)
+
+
 
 
 
