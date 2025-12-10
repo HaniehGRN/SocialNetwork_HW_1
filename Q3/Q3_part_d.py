@@ -60,7 +60,7 @@ def fit_linear_regression(bins_center, counts):
 
 
 instance_graph = Graph()
-k_avg = 1.01
+k_avg = 1
 N = 10000 # must be 10000
 G, pos = instance_graph.random_network(N, k_avg)
 connected_components = get_connected_components(G)
@@ -107,7 +107,7 @@ nx.draw(
 ax2.set_title("\nG(N, p)\n", fontsize=12, fontweight="bold")
 ax2.set_aspect('equal', adjustable='box')
 fig.tight_layout()
-plt.show()
+
 
 # print(G.nodes())
 # print(pos)
@@ -141,4 +141,24 @@ plt.show()
 #
 # Calculated exponent (alpha): 2.3894
 # R-squared value (goodness of fit): 0.9208
+
+print("bins center : ", bins_center)
+print("counts : ", counts)
+temp = np.power(counts, -alpha)
+temp[np.isinf(temp)] = np.nan
+print("s^-alpha : ", temp)
+
+fig2, (ax3, ax4) = plt.subplots(1, 2, figsize=(12, 6))
+# ax3 = fig2.add_subplot(111)
+ax3.plot(bins_center, counts, color='orange', marker='o')
+ax3.set_xlabel('s')
+ax3.set_ylabel('P(s)')
+ax3.set_title("P(s) vs. s")
+ax4.plot(bins_center, temp, color='blue', marker='x')
+ax4.set_xlabel('s')
+ax4.set_ylabel('s^α')
+ax4.set_title("s^α vs. s")
+# fig2.legend()
+ax4.set_aspect('equal', adjustable='box')
+plt.show()
 
