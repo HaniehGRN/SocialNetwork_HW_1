@@ -11,8 +11,8 @@ from sklearn.linear_model import LinearRegression
 #--------------------- define parameters ---------------------
 
 start_node_num = 500
-end_node_num = 5000
-point_count = 60
+end_node_num = 600 # 5000
+points_count = 10 # 60
 
 #--------------------- define variables ---------------------
 
@@ -23,20 +23,17 @@ average_distance_random_network = []
 
 #--------------------- define functions ---------------------
 
-def calculate_average_shortest_path(G, shortest_path_sample_size):
+def get_average_shortest_path(G, sample_size):
     # ensure calculating shortest path on a connected graph
-    largest_cc_nodes = max(nx.connected_components(G), key=len)
-    giant_component = G.subgraph(largest_cc_nodes).copy()
+    giant_component = G.subgraph(max(nx.connected_components(G), key=len)).copy()
     N = giant_component.number_of_nodes()
-
     if N == 0:
         return np.nan
-
-    if N < shortest_path_sample_size:
-        shortest_path_sample_size = N
+    if N < sample_size:
+        sample_size = N
 
     nodes = list(giant_component.nodes())
-    sources = random.sample(nodes, shortest_path_sample_size)
+    sources = random.sample(nodes, sample_size)
     total_distance = 0
     total_paths = 0
     for source in sources:
@@ -49,30 +46,30 @@ def calculate_average_shortest_path(G, shortest_path_sample_size):
         return np.nan
     return total_distance / total_paths
 
-def calculate_average_distance_per_node_num_ring_lattice(G, node_num, graph_sample_size):
-    G_ring_lattice, pos = G.ring_lattice(node_num)
-    average_distance_ring_lattice.append(calculate_average_shortest_path(G_ring_lattice, graph_sample_size))
+def get_average_distances_1DLattice(G, node_num, graph_sample_size):
+    ring_lattice, pos = G.ring_lattice(node_num)
+    average_distance_ring_lattice.append(get_average_shortest_path(ring_lattice, graph_sample_size))
 
-def calculate_average_distance_per_node_num_square_lattice(G, node_num, graph_sample_size):
+def get_average_distances_2DLattice(G, node_num, graph_sample_size):
     Lx = int(math.floor(math.sqrt(node_num)))
     Ly = int(math.ceil(node_num / Lx))
-    G_square_lattice, pos = G.square_Lattice(Lx, Ly)
-    average_distance_square_lattice.append(calculate_average_shortest_path(G_square_lattice, graph_sample_size))
+    square_lattice, pos = G.square_Lattice(Lx, Ly)
+    average_distance_square_lattice.append(get_average_shortest_path(square_lattice, graph_sample_size))
 
-def calculate_average_distance_per_node_num_cubic_lattice(G, node_num, graph_sample_size):
+def get_average_distances_3DLattice(G, node_num, graph_sample_size):
     Lx = int(node_num ** (1 / 3))
     Ly = int(math.sqrt(node_num / Lx))
     Lz = int(math.ceil(node_num / (Lx * Ly)))
-    G_cubic_lattice, pos = G.cubic_grid_Lattice(Lx, Ly, Lz, False)
-    average_distance_cubic_lattice.append(calculate_average_shortest_path(G_cubic_lattice, graph_sample_size))
+    cubic_lattice, pos = G.cubic_grid_Lattice(Lx, Ly, Lz, False)
+    average_distance_cubic_lattice.append(get_average_shortest_path(cubic_lattice, graph_sample_size))
 
-def calculate_average_distance_per_node_num_random_network(G, node_num, graph_sample_size, k_avg):
+def get_average_distances_random_network(G, node_num, graph_sample_size, k_avg):
     G_random_network, pos = G.random_network(node_num, k_avg)
-    average_distance_random_network.append(calculate_average_shortest_path(G_random_network, graph_sample_size))
+    average_distance_random_network.append(get_average_shortest_path(G_random_network, graph_sample_size))
 
 #--------------------- generate N logarithmically ---------------------
 
-node_num_vector = np.sort(np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), point_count))).astype(int))
+node_num_vector = np.sort(np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), points_count))).astype(int))
 # print(f"Testing N values (log base 10): {node_num_vector}")
 
 #--------------------- instantiate graph ---------------------
@@ -81,12 +78,12 @@ instance_graph = Graph()
 
 #--------------------- calculate <d> per node number and topology ---------------------
 
-# for node_num in node_num_vector:
-#     graph_sample_size = node_num
-#     calculate_average_distance_per_node_num_ring_lattice(instance_graph, node_num, graph_sample_size)
-#     calculate_average_distance_per_node_num_square_lattice(instance_graph, node_num, graph_sample_size)
-#     calculate_average_distance_per_node_num_cubic_lattice(instance_graph, node_num, graph_sample_size)
-#     calculate_average_distance_per_node_num_random_network(instance_graph, node_num, graph_sample_size, 4)
+for node_num in node_num_vector:
+    graph_sample_size = node_num
+    get_average_distances_1DLattice(instance_graph, node_num, graph_sample_size)
+    get_average_distances_2DLattice(instance_graph, node_num, graph_sample_size)
+    get_average_distances_3DLattice(instance_graph, node_num, graph_sample_size)
+    get_average_distances_random_network(instance_graph, node_num, graph_sample_size, 4)
 
 #--------------------- save results to improve plots in implementation ---------------------
 
@@ -99,6 +96,13 @@ instance_graph = Graph()
 
 #--------------------- log of N & <d> ---------------------
 
+# average_distances = np.array([average_distance_ring_lattice,
+#                               average_distance_square_lattice,
+#                               average_distance_cubic_lattice,
+#                               average_distance_random_network])
+
+#--------------------- log of N & <d> ---------------------
+
 # base_10_log1 = np.log10(average_distance_ring_lattice)
 # base_10_log2 = np.log10(average_distance_square_lattice)
 # base_10_log3 = np.log10(average_distance_cubic_lattice)
@@ -107,17 +111,42 @@ instance_graph = Graph()
 
 #--------------------- plot graphs ---------------------
 
-# fig1, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
-#
-# ax1.plot(node_num_vector, average_distance_ring_lattice, color="black")
-# ax1.plot(node_num_vector, average_distance_square_lattice, color="blue")
-# ax1.plot(node_num_vector, average_distance_cubic_lattice, color="green")
-# ax1.plot(node_num_vector, average_distance_random_network, color="red")
-# ax2.plot(base_10_log5, base_10_log1, color="black")
-# ax2.plot(base_10_log5, base_10_log2, color="blue")
-# ax2.plot(base_10_log5, base_10_log3, color="green")
-# ax2.plot(base_10_log5, base_10_log4, color="red")
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+# Your plotting code
+l1, = ax1.plot(node_num_vector, average_distance_ring_lattice, label="Ring Lattice")
+l2, = ax1.plot(node_num_vector, average_distance_square_lattice, label="Square Lattice")
+l3, = ax1.plot(node_num_vector, average_distance_cubic_lattice, label="Cubic Lattice")
+l4, = ax1.plot(node_num_vector, average_distance_random_network, label="Random Network")
+
+ax2.plot(node_num_vector, average_distance_ring_lattice)
+ax2.plot(node_num_vector, average_distance_square_lattice)
+ax2.plot(node_num_vector, average_distance_cubic_lattice)
+ax2.plot(node_num_vector, average_distance_random_network)
+
+# Subplot titles
+ax1.set_title("Linear Plot", fontsize=10)
+ax2.set_title("Log-log Plot", fontsize=10)
+
+# Shared labels
+fig.supxlabel("N", fontsize=10)
+fig.supylabel("<d>", fontsize=10)
+
+# SHARED LEGEND — working version
+fig.legend(
+    handles=[l1, l2, l3, l4],
+    labels=["Ring Lattice", "Square Lattice", "Cubic Lattice", "Random Network"],
+    loc="upper center",
+    ncol=4,
+    frameon=True,
+    bbox_to_anchor=(0.5, 0.98)   # move legend a little lower
+)
+
+# Keep space for legend and titles
+plt.tight_layout(rect=[0, 0, 1, 0.90])  # MORE SPACE on top
+
 plt.show()
+
 
 #--------------------- fit linear regression model on each curve ---------------------
 
