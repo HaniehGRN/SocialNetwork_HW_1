@@ -85,6 +85,16 @@ def degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probabil
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
     plt.show()
 
+def fit_linear_regression(degrees_probability, degree):
+
+    slope, intercept, r_value, p_value, std_err = linregress(
+        np.log(degree),
+        np.log(degrees_probability)
+    )
+
+    # The slope of the line is the negative of the power law exponent (alpha)
+    return slope, r_value
+
 
 b = 10
 N = np.power(2, b)
@@ -94,12 +104,17 @@ G.add_nodes_from(nodes_list)
 G.add_edges_from(edges_list)
 pos = nx.spring_layout(G, seed=42)
 
-adjacency_matrix = nx.adjacency_matrix(G).toarray()
-spy_plot(G, pos, adjacency_matrix)
+# adjacency_matrix = nx.adjacency_matrix(G).toarray()
+# spy_plot(G, pos, adjacency_matrix)
 
 in_degrees, in_degrees_frequency = get_degrees_frequencies(G.in_degree())
 out_degrees, out_degrees_frequency = get_degrees_frequencies(G.out_degree())
 in_degrees_probability = get_probability(N, in_degrees_frequency)
 out_degrees_probability = get_probability(N, out_degrees_frequency)
-degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probability, in_degrees, out_degrees)
+# degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probability, in_degrees, out_degrees)
 
+in_degree_distribution_slope, r_value = fit_linear_regression(in_degrees_probability, in_degrees)
+out_degree_distribution_slope, r_value = fit_linear_regression(out_degrees_probability, out_degrees)
+
+print(in_degree_distribution_slope)
+print(out_degree_distribution_slope)

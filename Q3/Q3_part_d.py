@@ -4,7 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from generate_graph import Graph
-from scipy.stats import linregress, alpha
+from scipy.stats import linregress
 
 
 def calculate_probability(k, N):
