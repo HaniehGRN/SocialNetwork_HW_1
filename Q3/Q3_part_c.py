@@ -41,7 +41,6 @@ def get_giant_component(G):
     giant_component_size = giant_component.number_of_nodes()
     return giant_component, giant_component_size
 
-
 def get_relative_giant_component_size(giant_component_size, N):
     NG = giant_component_size
     S = NG / N
