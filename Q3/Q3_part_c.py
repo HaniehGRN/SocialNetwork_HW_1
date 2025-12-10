@@ -71,22 +71,22 @@ def get_S(instance_graph, k, N):
 # average_degree = []
 # S_relative_giant_component_size = []
 instance_graph = Graph()
-N = 1000
+N = 10000
 
 for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_regions):
     k = round(k, 2)
     get_S(instance_graph, k, N)
     print("------------------------------------------------------------------------")
 
-for k in np.arange(non_critical_region_upper_bound, critical_region_upper_bound, step_size_critical_region):
-    k = round(k, 2)
-    get_S(instance_graph, k, N)
-    print("------------------------------------------------------------------------")
+# for k in np.arange(non_critical_region_upper_bound, critical_region_upper_bound, step_size_critical_region):
+#     k = round(k, 2)
+#     get_S(instance_graph, k, N)
+#     print("------------------------------------------------------------------------")
 
-for k in np.arange(critical_region_upper_bound, average_degree_upper_bound, step_size_non_critical_regions):
-    k = round(k, 2)
-    get_S(instance_graph, k, N)
-    print("------------------------------------------------------------------------")
+# for k in np.arange(critical_region_upper_bound, average_degree_upper_bound, step_size_non_critical_regions):
+#     k = round(k, 2)
+#     get_S(instance_graph, k, N)
+#     print("------------------------------------------------------------------------")
 
 S_relative_giant_component_size = np.array(S_relative_giant_component_size)
 average_degree = np.array(average_degree)
@@ -95,6 +95,7 @@ print("average_degree : ", average_degree)
 # plt.plot(average_degree, S_relative_giant_component_size, label=f'N = {N}')
 # plt.legend(loc='upper right')
 
+# N = 100
 # S_relative_giant_component_size :  [0.01   0.0246 0.032  0.041  0.0472 0.0658 0.0824 0.0948 0.1162 0.1288
 #  0.1488 0.1498 0.141  0.1694 0.172  0.1758 0.1982 0.1846 0.2114 0.179
 #  0.2206 0.2242 0.277  0.2634 0.2594 0.2976 0.281  0.3014 0.336  0.3482
@@ -107,4 +108,20 @@ print("average_degree : ", average_degree)
 #  1.2  1.22 1.24 1.26 1.28 1.3  1.4  1.5  1.6  1.7  1.8  1.9  2.   2.1
 #  2.2  2.3  2.4  2.5  2.6  2.7  2.8  2.9  3.   3.1  3.2  3.3  3.4  3.5
 #  3.6  3.7  3.8  3.9  4.   4.1  4.2  4.3  4.4  4.5  4.6  4.7  4.8  4.9 ]
+
+# N = 1000
+# S_relative_giant_component_size :  [0.001   0.00346 0.00506 0.00628 0.00866 0.01188 0.01634 0.02106 0.03346
+#  0.03568 0.03754 0.0494  0.05034 0.06226 0.05684 0.06844 0.06688 0.09706
+#  0.08342 0.1023  0.12658 0.12748 0.16436 0.17498 0.19976 0.20496 0.24092
+#  0.26894 0.28056 0.30166 0.33054 0.33698 0.3653  0.41524 0.5108  0.5907
+#  0.64178 0.69192 0.73528 0.76462 0.80224 0.81718 0.8472  0.86348 0.88258
+#  0.89188 0.90804 0.91382 0.9249  0.93216 0.9418  0.94888 0.95182 0.9591
+#  0.96298 0.96622 0.97022 0.97182 0.97526 0.97762 0.98118 0.9835  0.98436
+#  0.98472 0.98726 0.98862 0.98968 0.99036 0.99042 0.99178]
+# average_degree :  [0.   0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.82 0.84 0.86 0.88 0.9
+#  0.92 0.94 0.96 0.98 1.   1.02 1.04 1.06 1.08 1.1  1.12 1.14 1.16 1.18
+#  1.2  1.22 1.24 1.26 1.28 1.3  1.4  1.5  1.6  1.7  1.8  1.9  2.   2.1
+#  2.2  2.3  2.4  2.5  2.6  2.7  2.8  2.9  3.   3.1  3.2  3.3  3.4  3.5
+#  3.6  3.7  3.8  3.9  4.   4.1  4.2  4.3  4.4  4.5  4.6  4.7  4.8  4.9 ]
+
 
