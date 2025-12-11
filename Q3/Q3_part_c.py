@@ -167,3 +167,27 @@ print("average_degree : ", average_degree)
 # k : 0.88, i : 0
 # average degree :  [np.float64(0.8), np.float64(0.86), np.float64(0.88)]
 # S :  [np.float64(0.0068), np.float64(0.0137)]
+
+# k : 0.9, i : 0
+# average degree :  [np.float64(0.9)]
+# S :  [np.float64(0.0097)]
+
+# k : 0.92, i : 0
+# average degree :  [np.float64(0.9), np.float64(0.92)]
+# S :  [np.float64(0.0097), np.float64(0.0199)]
+#
+# k : 0.94, i : 0
+# average degree :  [np.float64(0.9), np.float64(0.92), np.float64(0.94)]
+# S :  [np.float64(0.0097), np.float64(0.0199), np.float64(0.0329)]
+#\
+
+# k : 0.96, i : 0
+# average degree :  [np.float64(0.9), np.float64(0.92), np.float64(0.94), np.float64(0.96)]
+# S :  [np.float64(0.0097), np.float64(0.0199), np.float64(0.0329), np.float64(0.0165)]
+
+# k : 0.98, i : 0
+# average degree :  [np.float64(0.98)]
+# S :  [np.float64(0.05)]
+
+
+

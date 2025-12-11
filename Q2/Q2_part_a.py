@@ -147,23 +147,17 @@ def Q2_part_a(b):
     print("in-degree distribution slope (gamma in power-law) : ", in_degree_distribution_slope)
     print("out-degree distribution slope (gamma in power-law) : ", out_degree_distribution_slope)
 
-def Q2_part_b(b, x_start, x_end, r_start, r_end):
+def Q2_part_b(b, x_start, x_end, r_start, r_end, sample_size):
     graph_density_list = []
     x_r_pair_list = []
+    r_range = np.unique(np.int32(np.logspace(np.log2(r_start), np.log2(r_end), sample_size, base=2)))
     for x in range(x_start, x_end):
-        for r in range(r_start, r_end): # must be logarithmically
+        for r in r_range: # must be logarithmically
             x_r_pair_list.append([x, r])
             source_patterns_set, destination_patterns_set = generate_pattern_stochastic(b, x_start, x_end)
             G, pos = generate_RG_network(b, source_patterns_set, destination_patterns_set)
             graph_density = nx.density(G)
             graph_density_list.append(graph_density)
 
-    # plot
-
-
-
-
-
-source_pattern_set, destination_pattern_set = generate_pattern_stochastic(b, x, 3)
-print(source_pattern_set, destination_pattern_set)
-
+    print("Graph density list : ", graph_density_list)
+    print('(x,r) pairs : ', x_r_pair_list)
