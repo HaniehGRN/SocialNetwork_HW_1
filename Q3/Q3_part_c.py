@@ -246,7 +246,7 @@ S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
     np.float64(0.9837), np.float64(0.9833), np.float64(0.9813),
     np.float64(0.9866), np.float64(0.9876), np.float64(0.9882),
     np.float64(0.9921), np.float64(0.9923), np.float64(0.9923),
-
+    np.float64(0.9842),
     ])
 
 s2 = [np.float64(0.22), ]
