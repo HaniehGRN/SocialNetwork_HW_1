@@ -5,36 +5,59 @@ import numpy as np
 import re
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import linregress
+import random
 
 
 # --------------------- generate graph ---------------------
 
-def generate_pattern(b):
-    source_set = [(r'^' + (i * '0') + ((b - i) * '.')) for i in range(0, b)]
-    destination_set = [(r'' + (i * '.') + ((b - i) * '1')) for i in range(0, b)]
-    return source_set, destination_set
+def generate_pattern_deterministic(b):
+    source_patterns_set = [(r'^' + (i * '0') + ((b - i) * '.')) for i in range(0, b)]
+    destination_patterns_set = [(r'' + (i * '.') + ((b - i) * '1')) for i in range(0, b)]
+    return source_patterns_set, destination_patterns_set
 
+def random_pattern_generate(rules_num, b, x):
+    rules = []
+    for r in range(rules_num):
+        b_list = [pos for pos in range(0, b)]
+        x_positions = random.sample(b_list, x)
+        for pos in x_positions:
+            b_list[pos] = '.'
+        for i in range(b):
+            if b_list[i] != '.':
+                b_list[i] = random.sample(['0', '1'], 1)[0]
+        rules.append(''.join(b_list))
+    return rules
 
-def detect_matching(source_set, destination_set, b, nodes_list):
+def generate_pattern_stochastic(b, x, rules_num):
+    source_patterns_set = random_pattern_generate(rules_num, b, x)
+    destination_patterns_set = random_pattern_generate(rules_num, b, x)
+
+    return source_patterns_set, destination_patterns_set
+
+def detect_matching(source_set, destination_set, nodes_list):
     destination_patterns_mask = [[node for node in nodes_list if re.match(destination_pattern, node)] for
                                  destination_pattern in destination_set]
     source_patterns_mask = [[node for node in nodes_list if re.match(source_pattern, node)] for source_pattern in
                             source_set]
     return source_patterns_mask, destination_patterns_mask
 
-
-def generate_RG_network(N, b):
+def generate_RG_network(b, source_patterns_set, destination_patterns_set):
+    N = np.power(2, b)
     nodes_list = [f'{i:0{b}b}' for i in range(0, N)]
-    source_set, destination_set = generate_pattern(b)
-    source_patterns_mask, destination_patterns_mask = detect_matching(source_set, destination_set, b, nodes_list)
+    # source_set, destination_set = generate_pattern(b)
+    source_patterns_mask, destination_patterns_mask = detect_matching(source_patterns_set, destination_patterns_set, b, nodes_list)
     edges_list = []
     for i in range(b):
         for source_node in source_patterns_mask[i]:
             for destination_node in destination_patterns_mask[i]:
                 edges_list.append([source_node, destination_node])
 
-    return nodes_list, edges_list
-
+    G = nx.DiGraph()
+    G.add_nodes_from(nodes_list)
+    G.add_edges_from(edges_list)
+    pos = nx.spring_layout(G, seed=42)
+    return G, pos
 
 def spy_plot(G, pos, adjacency_matrix):
 
@@ -85,36 +108,62 @@ def degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probabil
     plt.tight_layout(rect=[0, 0.05, 1, 0.95])
     plt.show()
 
-def fit_linear_regression(degrees_probability, degree):
+def fit_linear_regression(degrees_probability, degrees):
 
+    mask = (degrees > 0) & (degrees_probability > 0)
+    masked_degrees = degrees[ mask ] # log(0) is not defined
+    masked_degrees_probability = degrees_probability[ mask ]
     slope, intercept, r_value, p_value, std_err = linregress(
-        np.log(degree),
-        np.log(degrees_probability)
+        np.log(masked_degrees),
+        np.log(masked_degrees_probability)
     )
+    # gamma is the slope of the line in log log plot
 
-    # The slope of the line is the negative of the power law exponent (alpha)
     return slope, r_value
 
 
-b = 10
-N = np.power(2, b)
-nodes_list, edges_list = generate_RG_network(N, b)
-G = nx.DiGraph()
-G.add_nodes_from(nodes_list)
-G.add_edges_from(edges_list)
-pos = nx.spring_layout(G, seed=42)
+def Q2_part_a(b):
+    # b = 10
+    source_patterns_set, destination_patterns_set = generate_pattern_deterministic(b)
+    G, pos = generate_RG_network(b, source_patterns_set, destination_patterns_set)
+    N = G.number_of_nodes()
+    # G = nx.DiGraph()
+    # G.add_nodes_from(nodes_list)
+    # G.add_edges_from(edges_list)
+    # pos = nx.spring_layout(G, seed=42) must be removed
 
-# adjacency_matrix = nx.adjacency_matrix(G).toarray()
-# spy_plot(G, pos, adjacency_matrix)
+    # adjacency_matrix = nx.adjacency_matrix(G).toarray()
+    # spy_plot(G, pos, adjacency_matrix)
 
-in_degrees, in_degrees_frequency = get_degrees_frequencies(G.in_degree())
-out_degrees, out_degrees_frequency = get_degrees_frequencies(G.out_degree())
-in_degrees_probability = get_probability(N, in_degrees_frequency)
-out_degrees_probability = get_probability(N, out_degrees_frequency)
-# degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probability, in_degrees, out_degrees)
+    in_degrees, in_degrees_frequency = get_degrees_frequencies(G.in_degree())
+    out_degrees, out_degrees_frequency = get_degrees_frequencies(G.out_degree())
+    in_degrees_probability = get_probability(N, in_degrees_frequency)
+    out_degrees_probability = get_probability(N, out_degrees_frequency)
+    # degree_distribution_loglog_plot(in_degrees_probability, out_degrees_probability, in_degrees, out_degrees)
 
-in_degree_distribution_slope, r_value = fit_linear_regression(in_degrees_probability, in_degrees)
-out_degree_distribution_slope, r_value = fit_linear_regression(out_degrees_probability, out_degrees)
+    in_degree_distribution_slope, r_value = fit_linear_regression(in_degrees_probability, in_degrees)
+    out_degree_distribution_slope, r_value = fit_linear_regression(out_degrees_probability, out_degrees)
 
-print(in_degree_distribution_slope)
-print(out_degree_distribution_slope)
+    print("in-degree distribution slope (gamma in power-law) : ", in_degree_distribution_slope)
+    print("out-degree distribution slope (gamma in power-law) : ", out_degree_distribution_slope)
+
+def Q2_part_b(b, x_start, x_end, r_start, r_end):
+    graph_density_list = []
+    x_r_pair_list = []
+    for x in range(x_start, x_end):
+        for r in range(r_start, r_end): # must be logarithmically
+            x_r_pair_list.append([x, r])
+            source_patterns_set, destination_patterns_set = generate_pattern_stochastic(b, x_start, x_end)
+            G, pos = generate_RG_network(b, source_patterns_set, destination_patterns_set)
+            graph_density = nx.density(G)
+            graph_density_list.append(graph_density)
+
+    # plot
+
+
+
+
+
+source_pattern_set, destination_pattern_set = generate_pattern_stochastic(b, x, 3)
+print(source_pattern_set, destination_pattern_set)
+
