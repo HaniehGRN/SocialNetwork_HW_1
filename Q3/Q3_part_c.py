@@ -215,6 +215,7 @@ S= [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
     np.float64(0.9531), np.float64(0.9521), np.float64(0.9608),
     np.float64(0.9654), np.float64(0.9688), np.float64(0.973),
     np.float64(0.9749), np.float64(0.9767), np.float64(0.9799),
-    np.float64(0.9837), np.float64(0.9833),
+    np.float64(0.9837), np.float64(0.9833),np.float64(0.9813),
+    np.float64(0.9866), np.float64(0.9876),
     ]
 
