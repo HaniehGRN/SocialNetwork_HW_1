@@ -127,27 +127,20 @@ print("average_degree : ", average_degree)
 # N = 10000
 # average degree :  [np.float64(0.0), np.float64(0.1)]
 # S :  [np.float64(0.0001), np.float64(0.0006)]
-
 # average degree :  [np.float64(0.0), np.float64(0.1), np.float64(0.2)]
 # S :  [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006)]
-
 # k : 0.4, i : 0
 # average degree :  [np.float64(0.3), np.float64(0.4)]
 # S :  [np.float64(0.0008), np.float64(0.0011)]
-
 # k : 0.5, i : 0
 # average degree :  [np.float64(0.3), np.float64(0.4), np.float64(0.5)]
 # S :  [np.float64(0.0008), np.float64(0.0011), np.float64(0.0018)]
-
 # k : 0.6, i : 0
-# average degree :  [np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6)]
-# S :  [np.float64(0.0008), np.float64(0.0011), np.float64(0.0018), np.float64(0.0021)]
-
-
+# # average degree :  [np.float64(0.3), np.float64(0.4), np.float64(0.5), np.float64(0.6)]
+# # S :  [np.float64(0.0008), np.float64(0.0011), np.float64(0.0018), np.float64(0.0021)]
 # k : 0.7, i : 0
 # average degree :  [np.float64(0.7)]
 # S :  [np.float64(0.0068)]
-
 # k : 0.8, i : 0
 # average degree :  [np.float64(0.8)]
 # S :  [np.float64(0.006)]
@@ -155,11 +148,9 @@ print("average_degree : ", average_degree)
 # k : 0.82, i : 0
 # average degree :  [np.float64(0.8), np.float64(0.82)]
 # S :  [np.float64(0.006), np.float64(0.0091)]
-
 # k : 0.84, i : 0
 # average degree :  [np.float64(0.8), np.float64(0.82), np.float64(0.84)]
 # S :  [np.float64(0.006), np.float64(0.0091), np.float64(0.0079)]
-
 # k : 0.86, i : 0
 # average degree :  [np.float64(0.8), np.float64(0.86)]
 # S :  [np.float64(0.0068)]
@@ -167,24 +158,12 @@ print("average_degree : ", average_degree)
 # k : 0.88, i : 0
 # average degree :  [np.float64(0.8), np.float64(0.86), np.float64(0.88)]
 # S :  [np.float64(0.0068), np.float64(0.0137)]
-
 # k : 0.9, i : 0
 # average degree :  [np.float64(0.9)]
 # S :  [np.float64(0.0097)]
-
-# k : 0.92, i : 0
-# average degree :  [np.float64(0.9), np.float64(0.92)]
-# S :  [np.float64(0.0097), np.float64(0.0199)]
-#
-# k : 0.94, i : 0
-# average degree :  [np.float64(0.9), np.float64(0.92), np.float64(0.94)]
-# S :  [np.float64(0.0097), np.float64(0.0199), np.float64(0.0329)]
-#\
-
 # k : 0.96, i : 0
 # average degree :  [np.float64(0.9), np.float64(0.92), np.float64(0.94), np.float64(0.96)]
 # S :  [np.float64(0.0097), np.float64(0.0199), np.float64(0.0329), np.float64(0.0165)]
-
 # k : 0.98, i : 0
 # average degree :  [np.float64(0.98)]
 # S :  [np.float64(0.05)]
@@ -192,80 +171,49 @@ print("average_degree : ", average_degree)
 # k : 1.0, i : 0
 # average degree :  [np.float64(0.98), np.float64(1.0)]
 # S :  [np.float64(0.05), np.float64(0.0347)]
-
 # k : 1.2, i : 0
 # average degree :  [np.float64(1.2)]
 # S :  [np.float64(0.3462)]
-
 # k : 1.3, i : 0
 # average degree :  [np.float64(1.3)]
 # S :  [np.float64(0.4174)]
-
-# k : 1.4, i : 0
-# average degree :  [np.float64(1.3), np.float64(1.4)]
-# S :  [np.float64(0.4174), np.float64(0.4963)]
-
-# k : 1.5, i : 0
-# average degree :  [np.float64(1.3), np.float64(1.4), np.float64(1.5)]
-# S :  [np.float64(0.4174), np.float64(0.4963), np.float64(0.5729)]
-
-# k : 1.6, i : 0
-# average degree :  [np.float64(1.3), np.float64(1.4), np.float64(1.5), np.float64(1.6)]
-# S :  [np.float64(0.4174), np.float64(0.4963), np.float64(0.5729), np.float64(0.623)]
-
 # k : 1.7, i : 0
 # average degree :  [np.float64(1.3), np.float64(1.4), np.float64(1.5), np.float64(1.6), np.float64(1.7), np.float64(1.7)]
 # S :  [np.float64(0.4174), np.float64(0.4963), np.float64(0.5729), np.float64(0.623), np.float64(0.7013)]
-
-# k : 1.8, i : 0
-# average degree :  [np.float64(1.8)]
-# S :  [np.float64(0.7378)]
-
-# k : 1.9, i : 0
-# average degree :  [np.float64(1.8), np.float64(1.9)]
-# S :  [np.float64(0.7378), np.float64(0.7624)]
-
-# k : 2.0, i : 0
-# average degree :  [np.float64(1.8), np.float64(1.9), np.float64(2.0)]
-# S :  [np.float64(0.7378), np.float64(0.7624), np.float64(0.8038)]
-#
-# k : 2.2, i : 0
-# average degree :  [np.float64(1.8), np.float64(1.9), np.float64(2.0), np.float64(2.1), np.float64(2.2)]
-# S :  [np.float64(0.7378), np.float64(0.7624), np.float64(0.8038), np.float64(0.8147), np.float64(0.8398)]
-
 # k : 2.3, i : 0
 # average degree :  [np.float64(1.8), np.float64(1.9), np.float64(2.0), np.float64(2.1), np.float64(2.2), np.float64(2.3)]
 # S :  [np.float64(0.7378), np.float64(0.7624), np.float64(0.8038), np.float64(0.8147), np.float64(0.8398), np.float64(0.8628)]
-
-# k : 2.4, i : 0
-# average degree :  [np.float64(2.4)]
-# S :  [np.float64(0.8809)]
-
-# k : 2.5, i : 0
-# average degree :  [np.float64(2.4), np.float64(2.5)]
-# S :  [np.float64(0.8809), np.float64(0.8886)]
-
 # k : 2.7, i : 0
 # average degree :  [np.float64(2.4), np.float64(2.5), np.float64(2.6), np.float64(2.7)]
 # S :  [np.float64(0.8809), np.float64(0.8886), np.float64(0.9084), np.float64(0.9154)]
-#
-# k : 2.8, i : 0
-# average degree :  [np.float64(2.8)]
-# S :  [np.float64(0.9273)]
-#
-# k : 2.9, i : 0
-# average degree :  [np.float64(2.8), np.float64(2.9)]
-# S :  [np.float64(0.9273), np.float64(0.9336)]
-
 # k : 3.0, i : 0
 # average degree :  [np.float64(2.8), np.float64(2.9), np.float64(3.0)]
 # S :  [np.float64(0.9273), np.float64(0.9336), np.float64(0.9417)]
-# -
+# k : 3.4, i : 0
+# average degree :  [np.float64(3.1), np.float64(3.2), np.float64(3.3), np.float64(3.4)]
+# S :  [np.float64(0.9465), np.float64(0.9531), np.float64(0.9521), np.float64(0.9608)]
+# k : 4.0, i : 0
+# average degree :  [np.float64(3.5), np.float64(3.6), np.float64(3.7), np.float64(3.8), np.float64(3.9), np.float64(4.0)]
+# S :  [np.float64(0.9654), np.float64(0.9688), np.float64(0.973), np.float64(0.9749), np.float64(0.9767), np.float64(0.9799)]
 
-# k : 3.1, i : 0
-# average degree :  [np.float64(3.1)]
-# S :  [np.float64(0.9465)]
 
-# k : 3.2, i : 0
-# average degree :  [np.float64(3.1), np.float64(3.2)]
-# S :  [np.float64(0.9465), np.float64(0.9531)]
+
+
+S= [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
+    np.float64(0.0008), np.float64(0.0011), np.float64(0.0018),
+    np.float64(0.0021), np.float64(0.0068), np.float64(0.006),
+    np.float64(0.0091), np.float64(0.0079), np.float64(0.0068),
+    np.float64(0.0137), np.float64(0.0097), np.float64(0.0199),
+    np.float64(0.0329), np.float64(0.0165), np.float64(0.05),
+    np.float64(0.0347), np.float64(0.3462), np.float64(0.4174),
+    np.float64(0.4963), np.float64(0.5729), np.float64(0.623),
+    np.float64(0.7013), np.float64(0.7378), np.float64(0.7624),
+    np.float64(0.8038), np.float64(0.8147), np.float64(0.8398),
+    np.float64(0.8628), np.float64(0.8809), np.float64(0.8886),
+    np.float64(0.9084), np.float64(0.9154), np.float64(0.9273),
+    np.float64(0.9336), np.float64(0.9417), np.float64(0.9465),
+    np.float64(0.9531), np.float64(0.9521), np.float64(0.9608),
+    np.float64(0.9654), np.float64(0.9688), np.float64(0.973),
+    np.float64(0.9749), np.float64(0.9767), np.float64(0.9799)
+    ]
+
