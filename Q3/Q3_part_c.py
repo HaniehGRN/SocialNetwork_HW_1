@@ -66,16 +66,28 @@ def get_S(instance_graph, k, N):
 
     S_relative_giant_component_size.append(np.average(S))
 
+def S_k_plot(S, k, N):
+    iters = len(S)
+    colors = ["blue", "orange", "green"]
+    fig = plt.figure(figsize=(10, 6))
+    for i in range(iters):
+        print(S)
+        plt.plot(k,S[i], label=f'N={N[0]}', color=colors[i], linewidth=i+1.5)
+    plt.legend()
+    plt.xlabel('<k>')
+    plt.ylabel('S')
+    plt.show()
+
 
 # average_degree = []
 # S_relative_giant_component_size = []
 instance_graph = Graph()
-N = 10000
+# N = 10000
 
-for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_regions):
-    k = round(k, 2)
-    get_S(instance_graph, k, N)
-    print("------------------------------------------------------------------------")
+# for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_regions):
+#     k = round(k, 2)
+#     get_S(instance_graph, k, N)
+#     print("------------------------------------------------------------------------")
 
 # for k in np.arange(non_critical_region_upper_bound, critical_region_upper_bound, step_size_critical_region):
 #     k = round(k, 2)
@@ -87,10 +99,10 @@ for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, 
 #     get_S(instance_graph, k, N)
 #     print("------------------------------------------------------------------------")
 
-S_relative_giant_component_size = np.array(S_relative_giant_component_size)
-average_degree = np.array(average_degree)
-print("S_relative_giant_component_size : ", S_relative_giant_component_size)
-print("average_degree : ", average_degree)
+# S_relative_giant_component_size = np.array(S_relative_giant_component_size)
+# average_degree = np.array(average_degree)
+# print("S_relative_giant_component_size : ", S_relative_giant_component_size)
+# print("average_degree : ", average_degree)
 # plt.plot(average_degree, S_relative_giant_component_size, label=f'N = {N}')
 # plt.legend(loc='upper right')
 
@@ -123,6 +135,22 @@ print("average_degree : ", average_degree)
 #  2.2  2.3  2.4  2.5  2.6  2.7  2.8  2.9  3.   3.1  3.2  3.3  3.4  3.5
 #  3.6  3.7  3.8  3.9  4.   4.1  4.2  4.3  4.4  4.5  4.6  4.7  4.8  4.9 ]
 
+S2 = [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006), np.float64(0.0008),
+      np.float64(0.0011), np.float64(0.0018), np.float64(0.0021), np.float64(0.0068),
+      np.float64(0.006), np.float64(0.0091), np.float64(0.0079), np.float64(0.0068),
+      np.float64(0.0137), np.float64(0.0097), np.float64(0.0199), np.float64(0.0329),
+      np.float64(0.0165), np.float64(0.05), np.float64(0.0347), np.float64(0.3462),
+      np.float64(0.4174), np.float64(0.4963), np.float64(0.5729), np.float64(0.623),
+      np.float64(0.7013), np.float64(0.7378), np.float64(0.7624), np.float64(0.8038),
+      np.float64(0.8147), np.float64(0.8398), np.float64(0.8628), np.float64(0.8809),
+      np.float64(0.8886), np.float64(0.9084), np.float64(0.9154), np.float64(0.9273),
+      np.float64(0.9336), np.float64(0.9417), np.float64(0.9465), np.float64(0.9531),
+      np.float64(0.9521), np.float64(0.9608), np.float64(0.9654), np.float64(0.9688),
+      np.float64(0.973), np.float64(0.9749), np.float64(0.9767), np.float64(0.9799),
+
+      ]
+
+print(len(S2))
 
 # N = 10000
 # average degree :  [np.float64(0.0), np.float64(0.1)]
@@ -199,7 +227,7 @@ print("average_degree : ", average_degree)
 
 
 
-S= [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
+S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
     np.float64(0.0008), np.float64(0.0011), np.float64(0.0018),
     np.float64(0.0021), np.float64(0.0068), np.float64(0.006),
     np.float64(0.0091), np.float64(0.0079), np.float64(0.0068),
@@ -215,7 +243,49 @@ S= [np.float64(0.0001), np.float64(0.0006), np.float64(0.0006),
     np.float64(0.9531), np.float64(0.9521), np.float64(0.9608),
     np.float64(0.9654), np.float64(0.9688), np.float64(0.973),
     np.float64(0.9749), np.float64(0.9767), np.float64(0.9799),
-    np.float64(0.9837), np.float64(0.9833),np.float64(0.9813),
-    np.float64(0.9866), np.float64(0.9876),
-    ]
+    np.float64(0.9837), np.float64(0.9833), np.float64(0.9813),
+    np.float64(0.9866), np.float64(0.9876), np.float64(0.9882),
+    np.float64(0.9921), np.float64(0.9923), np.float64(0.9923),
 
+    ])
+
+s2 = [np.float64(0.22), ]
+
+# np.float64(0.9931)]
+
+# print(len(S2))
+
+S0 = np.array([0.01, 0.0246, 0.032, 0.041, 0.0472, 0.0658, 0.0824, 0.0948,
+               0.1162, 0.1288, 0.1488, 0.1498, 0.141, 0.1694, 0.172, 0.1758,
+               0.1982, 0.1846, 0.2114, 0.179, 0.2206, 0.2242, 0.277, 0.2634,
+               0.2594, 0.2976, 0.281, 0.3014, 0.336,
+               0.3778, 0.471, 0.5662, 0.6194, 0.6908, 0.7202, 0.7786, 0.7996, 0.8008,
+               0.8408, 0.8532, 0.893, 0.9008, 0.9056, 0.9184, 0.9286, 0.9356, 0.939,
+               0.9556, 0.9582, 0.9602, 0.965, 0.9668, 0.9736, 0.9772, 0.976, 0.9784,
+               0.9826, 0.985, 0.9868, 0.9864, 0.99, 0.9882, 0.991, 0.9908, 0.9928,
+               0.9954])
+print(len(S0))
+
+S1 = np.array([0.001, 0.00346, 0.00506, 0.00628, 0.00866, 0.01188, 0.01634, 0.02106,
+               0.03346, 0.03568, 0.03754, 0.0494, 0.05034, 0.06226, 0.05684, 0.06844,
+               0.06688, 0.09706, 0.08342, 0.1023, 0.12658, 0.12748, 0.16436, 0.17498,
+               0.19976, 0.20496, 0.24092, 0.26894, 0.28056, 0.30166, 0.33054, 0.33698,
+               0.3653, 0.41524, 0.5108, 0.5907, 0.64178, 0.69192, 0.73528, 0.76462,
+               0.80224, 0.81718, 0.8472, 0.86348, 0.88258, 0.89188, 0.90804, 0.91382,
+               0.9249, 0.93216, 0.9418, 0.94888, 0.95182, 0.9591, 0.96298, 0.96622,
+               0.97022, 0.97182, 0.97526, 0.97762, 0.98118, 0.9835, 0.98436,
+               0.98472, 0.98726, 0.98862, 0.98968, 0.99036, 0.99042, 0.99178])
+
+S = []
+S.append(S0)
+S.append(S1)
+S.append(S2)
+# print(len(S0), len(S1), len(S2))
+node_num_list = [100, 1000, 10000]
+k = np.array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1., 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4., 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9])
+print(len(k))
+# print(S0)
+# print(S1)
+# print(S2)
+# print(S)
+# S_k_plot(S, k, node_num_list)
