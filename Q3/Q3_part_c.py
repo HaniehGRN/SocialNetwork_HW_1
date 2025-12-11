@@ -68,14 +68,16 @@ def get_S(instance_graph, k, N):
 
 def S_k_plot(S, k, N):
     iters = len(S)
-    colors = ["blue", "orange", "green"]
+    colors = ["pink", "orange", "red"]
+    thik = [5.5, 3.5, 1]
     fig = plt.figure(figsize=(10, 6))
     for i in range(iters):
         print(S)
-        plt.plot(k,S[i], label=f'N={N[0]}', color=colors[i], linewidth=i+1.5)
+        plt.plot(k,S[i], label=f'N={N[i]}', color=colors[i], linewidth=thik[i])
     plt.legend()
     plt.xlabel('<k>')
     plt.ylabel('S')
+    plt.title('\nS vs. k\n', fontweight='bold')
     plt.show()
 
 
@@ -141,6 +143,7 @@ S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006), np.fl
       np.float64(0.9336), np.float64(0.9417), np.float64(0.9465), np.float64(0.9531),
       np.float64(0.9521), np.float64(0.9608), np.float64(0.9654), np.float64(0.9688),
       np.float64(0.973), np.float64(0.9749), np.float64(0.9767), np.float64(0.9799),
+      np.float64(0.9842), np.float64(0.9825), np.float64(0.9851),
       np.float64(0.9867), np.float64(0.9878), np.float64(0.9913),
       np.float64(0.9916), np.float64(0.9926), np.float64(0.9921),
       ])
@@ -158,4 +161,4 @@ print(len(k))
 # print(S1)
 # print(S2)
 # print(S)
-# S_k_plot(S, k, node_num_list)
+S_k_plot(S, k, node_num_list)
