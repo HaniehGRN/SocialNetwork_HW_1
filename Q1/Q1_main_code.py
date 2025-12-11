@@ -11,15 +11,15 @@ from sklearn.linear_model import LinearRegression
 #--------------------- define parameters ---------------------
 
 start_node_num = 500
-end_node_num = 600 # 5000
-points_count = 10 # 60
+end_node_num = 5000
+points_count = 60
 
 #--------------------- define variables ---------------------
 
-average_distance_ring_lattice = []
-average_distance_square_lattice = []
-average_distance_cubic_lattice = []
-average_distance_random_network = []
+# average_distance_ring_lattice = []
+# average_distance_square_lattice = []
+# average_distance_cubic_lattice = []
+# average_distance_random_network = []
 
 #--------------------- define functions ---------------------
 
@@ -47,151 +47,135 @@ def get_average_shortest_path(G, sample_size):
     return total_distance / total_paths
 
 def get_average_distances_1DLattice(G, node_num, graph_sample_size):
+
     ring_lattice, pos = G.ring_lattice(node_num)
-    average_distance_ring_lattice.append(get_average_shortest_path(ring_lattice, graph_sample_size))
+    average_distance_ring_lattice = get_average_shortest_path(ring_lattice, graph_sample_size)
+    return average_distance_ring_lattice
 
 def get_average_distances_2DLattice(G, node_num, graph_sample_size):
     Lx = int(math.floor(math.sqrt(node_num)))
     Ly = int(math.ceil(node_num / Lx))
     square_lattice, pos = G.square_Lattice(Lx, Ly)
-    average_distance_square_lattice.append(get_average_shortest_path(square_lattice, graph_sample_size))
+    average_distance_square_lattice = get_average_shortest_path(square_lattice, graph_sample_size)
+    return average_distance_square_lattice
 
 def get_average_distances_3DLattice(G, node_num, graph_sample_size):
     Lx = int(node_num ** (1 / 3))
     Ly = int(math.sqrt(node_num / Lx))
     Lz = int(math.ceil(node_num / (Lx * Ly)))
     cubic_lattice, pos = G.cubic_grid_Lattice(Lx, Ly, Lz, False)
-    average_distance_cubic_lattice.append(get_average_shortest_path(cubic_lattice, graph_sample_size))
+    average_distance_cubic_lattice = get_average_shortest_path(cubic_lattice, graph_sample_size)
+    return average_distance_cubic_lattice
 
 def get_average_distances_random_network(G, node_num, graph_sample_size, k_avg):
     G_random_network, pos = G.random_network(node_num, k_avg)
-    average_distance_random_network.append(get_average_shortest_path(G_random_network, graph_sample_size))
+    average_distance_random_network = get_average_shortest_path(G_random_network, graph_sample_size)
+    return average_distance_random_network
 
-#--------------------- generate N logarithmically ---------------------
+def plot_average_distance_node_num(node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network):
 
-node_num_vector = np.sort(np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), points_count))).astype(int))
-# print(f"Testing N values (log base 10): {node_num_vector}")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    l1, = ax1.plot(node_num_vector, average_distance_ring_lattice, label="Ring Lattice", color='black')
+    l2, = ax1.plot(node_num_vector, average_distance_square_lattice, label="Square Lattice", color='blue')
+    l3, = ax1.plot(node_num_vector, average_distance_cubic_lattice, label="Cubic Lattice", color='green')
+    l4, = ax1.plot(node_num_vector, average_distance_random_network, label="Random Network", color='red')
+    ax2.loglog(node_num_vector, average_distance_ring_lattice, color='black', base=10)
+    ax2.loglog(node_num_vector, average_distance_square_lattice, color='blue', base=10)
+    ax2.loglog(node_num_vector, average_distance_cubic_lattice, color='green', base=10)
+    ax2.loglog(node_num_vector, average_distance_random_network, color='red', base=10)
+    ax1.set_title("Linear Plot", fontweight="bold")
+    ax2.set_title("Log-log Plot", fontweight="bold")
+    fig.supxlabel("N", fontweight='bold')
+    fig.supylabel("<d>", fontsize=10, fontweight='bold')
+    fig.suptitle("\nN vs. <d>\n", fontweight='bold')
+    fig.legend(
+        handles=[l1, l2, l3, l4],
+        labels=["Ring Lattice", "Square Lattice", "Cubic Lattice", "Random Network"],
+        loc="upper center",
+        ncol=4,
+        frameon=True,
+        bbox_to_anchor=(0.5, 0.89)
+    )
+    plt.tight_layout(rect=[0, 0, 1, 0.90])
+    plt.show()
 
-#--------------------- instantiate graph ---------------------
+def extract_scaling_exponent(node_num_vector, average_distance):
+    model = LinearRegression()
+    model.fit(
+        np.log10(node_num_vector.reshape(-1, 1)),
+        np.log10(average_distance
+        ))
+    slope = model.coef_[0]
+    return slope
 
-instance_graph = Graph()
+def get_theoretical_exponent(node_num_vector):
 
-#--------------------- calculate <d> per node number and topology ---------------------
+    sqrt_node_num_vector = np.sqrt(node_num_vector)
+    # print(f'sqrt N : {sqrt_node_num_vector}\n,<d> : {average_distance_square_lattice}')
 
-for node_num in node_num_vector:
-    graph_sample_size = node_num
-    get_average_distances_1DLattice(instance_graph, node_num, graph_sample_size)
-    get_average_distances_2DLattice(instance_graph, node_num, graph_sample_size)
-    get_average_distances_3DLattice(instance_graph, node_num, graph_sample_size)
-    get_average_distances_random_network(instance_graph, node_num, graph_sample_size, 4)
+    sqrt3_node_num_vector = np.pow(node_num_vector, (1/3))
+    # print(f'N^1/3 : {sqrt3_node_num_vector}\n,<d> : {average_distance_cubic_lattice}')
 
-#--------------------- save results to improve plots in implementation ---------------------
+    ln_node_num_vector = np.log(node_num_vector)
+    # print(f'lnN : {ln_node_num_vector}\n,<d> : {average_distance_random_network}')
 
-# print(average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network, node_num_vector)
-# np.savetxt('average_distance_ring_lattice_array2.txt', average_distance_ring_lattice, fmt='%d', delimiter=',')
-# np.savetxt('average_distance_square_lattice_array2.txt', average_distance_square_lattice, fmt='%d', delimiter=',')
-# np.savetxt('average_distance_cubic_lattice_array2.txt', average_distance_cubic_lattice, fmt='%d', delimiter=',')
-# np.savetxt('average_distance_random_network2.txt', average_distance_random_network, fmt='%d', delimiter=',')
-# np.savetxt('node_num_vector.txt', node_num_vector, fmt='%d', delimiter=',')
+    return sqrt_node_num_vector, sqrt3_node_num_vector, ln_node_num_vector
 
-#--------------------- log of N & <d> ---------------------
+def Q1_a(start_node_num, end_node_num, points_count):
 
-# average_distances = np.array([average_distance_ring_lattice,
-#                               average_distance_square_lattice,
-#                               average_distance_cubic_lattice,
-#                               average_distance_random_network])
+    average_distance_ring_lattice = []
+    average_distance_square_lattice = []
+    average_distance_cubic_lattice = []
+    average_distance_random_network = []
+    k_avg = 4
 
-#--------------------- log of N & <d> ---------------------
+    #--------------------- generate N logarithmically ---------------------
 
-# base_10_log1 = np.log10(average_distance_ring_lattice)
-# base_10_log2 = np.log10(average_distance_square_lattice)
-# base_10_log3 = np.log10(average_distance_cubic_lattice)
-# base_10_log4 = np.log10(average_distance_random_network)
-# base_10_log5 = np.log10(node_num_vector)
+    node_num_vector = np.sort(np.unique(np.round(np.logspace(np.log10(start_node_num), np.log10(end_node_num), points_count))).astype(int))
+    # print(f"Testing N values (log base 10): {node_num_vector}")
 
-#--------------------- plot graphs ---------------------
+    #--------------------- instantiate graph ---------------------
+    instance_graph = Graph()
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    #--------------------- calculate <d> per node number and topology ---------------------
 
-# Your plotting code
-l1, = ax1.plot(node_num_vector, average_distance_ring_lattice, label="Ring Lattice")
-l2, = ax1.plot(node_num_vector, average_distance_square_lattice, label="Square Lattice")
-l3, = ax1.plot(node_num_vector, average_distance_cubic_lattice, label="Cubic Lattice")
-l4, = ax1.plot(node_num_vector, average_distance_random_network, label="Random Network")
+    for node_num in node_num_vector:
+        graph_sample_size = node_num
+        average_distance_ring_lattice.append(get_average_distances_1DLattice(instance_graph, node_num, graph_sample_size))
+        average_distance_square_lattice.append(get_average_distances_2DLattice(instance_graph, node_num, graph_sample_size))
+        average_distance_cubic_lattice.append(get_average_distances_3DLattice(instance_graph, node_num, graph_sample_size))
+        average_distance_random_network.append(get_average_distances_random_network(instance_graph, node_num, graph_sample_size, k_avg))
 
-ax2.plot(node_num_vector, average_distance_ring_lattice)
-ax2.plot(node_num_vector, average_distance_square_lattice)
-ax2.plot(node_num_vector, average_distance_cubic_lattice)
-ax2.plot(node_num_vector, average_distance_random_network)
-
-# Subplot titles
-ax1.set_title("Linear Plot", fontsize=10)
-ax2.set_title("Log-log Plot", fontsize=10)
-
-# Shared labels
-fig.supxlabel("N", fontsize=10)
-fig.supylabel("<d>", fontsize=10)
-
-# SHARED LEGEND — working version
-fig.legend(
-    handles=[l1, l2, l3, l4],
-    labels=["Ring Lattice", "Square Lattice", "Cubic Lattice", "Random Network"],
-    loc="upper center",
-    ncol=4,
-    frameon=True,
-    bbox_to_anchor=(0.5, 0.98)   # move legend a little lower
-)
-
-# Keep space for legend and titles
-plt.tight_layout(rect=[0, 0, 1, 0.90])  # MORE SPACE on top
-
-plt.show()
+    # --------------------- save results to improve plots in implementation ---------------------
+    #
+    # print(average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network, node_num_vector)
+    # np.savetxt('average_distance_ring_lattice_array2.txt', average_distance_ring_lattice, fmt='%d', delimiter=',')
+    # np.savetxt('average_distance_square_lattice_array2.txt', average_distance_square_lattice, fmt='%d', delimiter=',')
+    # np.savetxt('average_distance_cubic_lattice_array2.txt', average_distance_cubic_lattice, fmt='%d', delimiter=',')
+    # np.savetxt('average_distance_random_network2.txt', average_distance_random_network, fmt='%d', delimiter=',')
+    # np.savetxt('node_num_vector.txt', node_num_vector, fmt='%d', delimiter=',')
 
 
-#--------------------- fit linear regression model on each curve ---------------------
+    return node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network
 
-# base_10_log5 = base_10_log5.reshape(-1, 1)
-#
-# model1 = LinearRegression()
-# model2 = LinearRegression()
-# model3 = LinearRegression()
-# model4 = LinearRegression()
-#
-# model1.fit(base_10_log5, base_10_log1)
-# model2.fit(base_10_log5, base_10_log2)
-# model3.fit(base_10_log5, base_10_log3)
-# model4.fit(base_10_log5, base_10_log4)
+def Q1_b(node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network):
 
-#--------------------- extract scaling exponent ---------------------
+    plot_average_distance_node_num(node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network)
+    average_distances = [average_distance_ring_lattice,
+                         average_distance_square_lattice,
+                         average_distance_cubic_lattice,
+                         average_distance_random_network]
+    print(average_distances)
+    slopes_list = [extract_scaling_exponent(node_num_vector, average_distances[i]) for i in len(average_distances) ]
+    print(slopes_list)
+    print( node_num_vector,get_theoretical_exponent(node_num_vector))
 
-# slope = model1.coef_[0]
-# intercept = model1.intercept_
-# print(f"Slope (coefficient): {slope}")
-# print(f"Intercept: {intercept}")
-#
-# slope = model2.coef_[0]
-# intercept = model2.intercept_
-# print(f"Slope (coefficient): {slope}")
-# print(f"Intercept: {intercept}")
-#
-# slope = model3.coef_[0]
-# intercept = model3.intercept_
-# print(f"Slope (coefficient): {slope}")
-# print(f"Intercept: {intercept}")
-#
-# slope = model4.coef_[0]
-# intercept = model4.intercept_
-# print(f"Slope (coefficient): {slope}")
-# print(f"Intercept: {intercept}")
+average_distance_ring_lattice = np.array([125, 130, 135, 140, 146, 152, 158, 164, 171, 177, 185, 192, 200, 207, 216, 224, 233, 243, 252, 262, 273, 284, 295, 307, 319, 331, 345, 358, 373, 388, 403, 419, 436, 453, 471, 490, 509, 530, 551, 573, 595, 619, 644, 669, 696, 724, 752, 782, 814, 846, 880, 915, 951, 989, 1028, 1069, 1112, 1156, 1202, 1250])
+average_distance_square_lattice = np.array([11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 30, 31, 31, 32, 32, 33, 34, 34, 35])
+average_distance_cubic_lattice = np.array([7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17])
+average_distance_random_network = np.array([4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 5, 6, 6, 6, 6, 6, 6, 6])
+node_num_vector = [500, 520, 541, 562, 584, 608, 632, 657, 683, 710, 739, 768, 799, 830, 863, 898, 934, 971, 1009, 1050, 1091, 1135, 1180, 1227, 1276, 1326, 1379, 1434, 1491, 1551, 1612, 1676, 1743, 1813, 1885, 1960, 2038, 2119, 2203, 2291, 2382, 2477, 2575, 2678, 2784, 2895, 3010, 3130, 3255, 3384, 3519, 3659, 3805, 3956, 4114, 4277, 4448, 4625, 4809, 5000]
+# plot_average_distance_node_num(node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network)
 
-#--------------------- compare the simulated <d> with the theoretical predictions ---------------------
-
-# sqrt_node_num_vector = np.sqrt(node_num_vector)
-# print(f'sqrt N : {sqrt_node_num_vector}\n,<d> : {average_distance_square_lattice}')
-#
-# sqrt3_node_num_vector = np.pow(node_num_vector, (1/3))
-# print(f'N^1/3 : {sqrt3_node_num_vector}\n,<d> : {average_distance_cubic_lattice}')
-#
-# ln_node_num_vector = np.log(node_num_vector)
-# print(f'lnN : {ln_node_num_vector}\n,<d> : {average_distance_random_network}')
+Q1_b(node_num_vector, average_distance_ring_lattice, average_distance_square_lattice, average_distance_cubic_lattice, average_distance_random_network)
 
