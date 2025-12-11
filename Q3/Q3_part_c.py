@@ -265,3 +265,7 @@ print("average_degree : ", average_degree)
 # k : 3.1, i : 0
 # average degree :  [np.float64(3.1)]
 # S :  [np.float64(0.9465)]
+
+# k : 3.2, i : 0
+# average degree :  [np.float64(3.1), np.float64(3.2)]
+# S :  [np.float64(0.9465), np.float64(0.9531)]

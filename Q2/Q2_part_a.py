@@ -174,10 +174,45 @@ def Q2_part_b(b, x_start, x_end, r_start, r_end, sample_size):
 
 # Q2_part_b(10, 1, 9, 2, 160, 20)
 
+def graph_density_3D_surface_plot(x_lists, r_lists, graphs_density_list):
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_trisurf(x_lists, r_lists, graphs_density_list, cmap='viridis', edgecolor='none', shade=False)
+    ax.set_xlabel('x', fontweight='bold')
+    ax.set_ylabel('r', fontweight='bold')
+    ax.set_zlabel('Graph Density', fontweight='bold')
+    ax.set_title('3D Surface Plot Graph Density for each (x,r)', fontweight='bold')
+    plt.show()
+
+def theoretical_simulated_density_subplot(r_lists, graphs_density_list, theoretical_density):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
+    ax1.plot(r_lists, graphs_density_list, label="simulated graphs density", color="blue")
+    ax1.set_title("\nSimulated Graphs Density\n", fontweight="bold")
+    ax2.plot(r_lists, theoretical_density, label="theoretical graph density", color="orange")
+    ax2.set_title("\nTheoretical Graphs Density\n", fontweight="bold")
+    fig.supxlabel('Number of Rules\n', fontweight="bold", fontsize=10)
+    fig.supylabel("Density", fontweight="bold", fontsize=10)
+    fig.suptitle('\nSimulated vs. Theoretical Density\n', fontsize=16, fontweight="bold")
+    fig.subplots_adjust()
+    fig.subplots_adjust(hspace=0)
+    plt.tight_layout()
+    plt.show()
+
 def get_theoretical_density(x_lists, r_lists, b):
     pi = np.power(2.0, (x_lists - b))
     theoretical_density = 1 - np.power(1 - np.power(pi, 2), 2*r_lists)
     return theoretical_density
+
+def theoretical_simulated_density_oneplot (r_lists, graphs_density_list, theoretical_density):
+    fig = plt.figure(figsize=(10, 6))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(r_lists, theoretical_density, label="theoretical graph density", color='orange', linewidth=4)
+    ax.plot(r_lists, graphs_density_list, label="simulated graphs_density", color='blue', linewidth=1)
+    ax.set_xlabel("number of rules", fontweight='bold')
+    ax.set_ylabel("Density", fontweight='bold')
+    ax.set_title("\nGraph Density vs. r Growth\n", fontweight='bold')
+    ax.legend()
+    plt.show()
 
 graphs_density_list = np.round([7.636852394916911e-06, 3.0547409579667644e-05, 0.00012218963831867058, 0.0004887585532746823, 0.0019550342130987292, 0.007820136852394917, 0.031036168132942327, 0.12121212121212122, 1.1455278592375367e-05, 4.5821114369501466e-05, 0.00018328445747800586, 0.0007331378299120235, 0.002932551319648094, 0.011638563049853373, 0.04594330400782014, 0.17619745845552298, 1.9092130987292278e-05, 7.636852394916911e-05, 0.00030547409579667644, 0.0012218963831867058, 0.0048570381231671554, 0.019550342130987292, 0.07673509286412512, 0.2694281524926686, 2.2910557184750733e-05, 9.164222873900293e-05, 0.00036656891495601173, 0.001466275659824047, 0.005865102639296188, 0.02297165200391007, 0.09026759530791789, 0.34066471163245354, 2.672898338220919e-05, 0.00010691593352883675, 0.000427663734115347, 0.001710654936461388, 0.006842619745845552, 0.027003910068426198, 0.10679374389051809, 0.36436950146627567, 3.8184261974584555e-05, 0.00015273704789833822, 0.0006109481915933529, 0.002439974340175953, 0.009714076246334311, 0.038646291544477025, 0.14818548387096775, 0.46638257575757575, 4.5821114369501466e-05, 0.00018328445747800586, 0.0007331378299120235, 0.002932551319648094, 0.011722568426197458, 0.04573329056695992, 0.17279905913978494, 0.5403684017595308, 5.7276392961876836e-05, 0.00022910557184750734, 0.0009135584677419354, 0.0036656891495601175, 0.01451001955034213, 0.05737567204301075, 0.20883927480449657, 0.6136210899315738, 7.636852394916911e-05, 0.00030547409579667644, 0.0012209417766373412, 0.004868493401759531, 0.019473973607038123, 0.0755704728739003,
                                0.2698749083577713, 0.7348274835043989, 9.546065493646138e-05, 0.00038184261974584554, 0.0015273704789833822, 0.0060751160801564025, 0.02412481671554252, 0.0935934445259042, 0.32894309781280545, 0.8099072886119257, 0.00011837121212121212, 0.0004734848484848485, 0.0018882117546432063, 0.007563347690615836, 0.029787542766373413, 0.11563817357038123, 0.37720514112903225, 0.8573111406402737, 0.00015273704789833822, 0.0006109481915933529, 0.0024371105205278592, 0.00974080522971652, 0.03787115102639296, 0.14480235826001955, 0.4708138593597263, 0.9351841245112414, 0.00019092130987292277, 0.0007636852394916911, 0.003045194892473118, 0.01216168743890518, 0.04756613514173998, 0.1802402171920821, 0.5342025980571847, 0.9485476615957967, 0.0002405608504398827, 0.0009612887952101662, 0.003839427541544477, 0.015271795576735093, 0.05976123380987292, 0.21644176136363635, 0.6385000458211144, 0.9773328674853372, 0.00030547409579667644, 0.0012218963831867058, 0.0048828125, 0.019365148460410556, 0.0752249053030303, 0.26755807826246336, 0.7229130391617791, 0.9936175006109482, 0.00038184261974584554, 0.0015273704789833822, 0.006095162817693059, 0.02403508369990225, 0.09342256995356794, 0.32445740163734116, 0.7909554847873901, 0.9996315218719453, 0.00048494012707722385, 0.001935942082111437, 0.00773804068914956, 0.030469131842619745, 0.11643049700635386, 0.39279863911290325, 0.8655637142595308, 1.000782777370479, 0.0006109481915933529, 0.002442838159824047, 0.00972457691837732, 0.038411458333333336, 0.14467539558895406, 0.4647511531647116, 0.9177616003787878, 1.0009517427297165],
@@ -190,36 +225,7 @@ r_lists = x_r_pairs[..., 1]
 b = 10
 theoretical_density = get_theoretical_density(x_lists, r_lists, b)
 
-# fig = plt.figure(figsize=(10,6))
-# ax = fig.add_subplot(1,1,1)
-# ax.plot(r_lists, graphs_density_list, label="simulated graphs_density")
-# ax.plot(r_lists, theoretical_density, label="theoretical graph density")
-# ax.set_xlabel("r")
-# ax.set_ylabel("Density")
-# ax.set_title("Graph Density vs. r Growth")
-# ax.legend()
-# plt.show()
 
-fig, (ax1, ax2) = plt.subplots(1,2, figsize=(10,5), sharex=True, sharey=True)
-# ax1, ax2 = fig.add_subplot(1,2, sharex=True, sharey=True)
-ax1.plot(r_lists, graphs_density_list, label="simulated graphs density", color="blue")
-ax1.set_title("\nSimulated Graphs Density\n", fontweight="bold")
-ax2.plot(r_lists, theoretical_density, label="theoretical graph density", color="orange")
-ax2.set_title("\nTheoretical Graphs Density\n", fontweight="bold")
-fig.supxlabel('Number of Rules\n', fontweight="bold", fontsize=10)
-fig.supylabel("Density", fontweight="bold", fontsize=10)
-# ax1.set_ylabel(, )
-fig.suptitle('\nSimulated vs. Theoretical Density\n', fontsize=16, fontweight="bold")
-fig.subplots_adjust()
-fig.subplots_adjust(hspace=0)
-plt.tight_layout()
-plt.show()
 
-# fig = plt.figure(figsize=(8, 6))
-# ax = fig.add_subplot(111, projection='3d')
-# ax.plot_trisurf(x_lists, r_lists, graphs_density_list, cmap='viridis', edgecolor='none', shade=False)
-# ax.set_xlabel('x', fontweight='bold')
-# ax.set_ylabel('r', fontweight='bold')
-# ax.set_zlabel('Graph Density', fontweight='bold')
-# ax.set_title('3D Surface Plot Graph Density for each (x,r)', fontweight='bold')
-# plt.show()
+
+
