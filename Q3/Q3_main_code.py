@@ -1,4 +1,5 @@
 #--------------------- import libraries ---------------------
+from itertools import count
 
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -148,7 +149,6 @@ def S_k_plot(S, k, N):
     thik = [5.5, 3.5, 1]
     fig = plt.figure(figsize=(10, 6))
     for i in range(iters):
-        print(S)
         plt.plot(k,S[i], label=f'N={N[i]}', color=colors[i], linewidth=thik[i])
     plt.legend()
     plt.xlabel('<k>')
@@ -176,7 +176,6 @@ def S_k_plot(S, k, N):
     thik = [5.5, 3.5, 1]
     fig = plt.figure(figsize=(10, 6))
     for i in range(iters):
-        print(S)
         plt.plot(k,S[i], label=f'N={N[i]}', color=colors[i], linewidth=thik[i])
     plt.legend()
     plt.xlabel('<k>')
@@ -188,31 +187,24 @@ def logarithmic_binning(connected_components_sizes):
     if len(connected_components_sizes) > 0:
         min_size = max(1, np.min(connected_components_sizes))
         max_size = np.max(connected_components_sizes)
-        bins = np.geomspace(min_size, max_size, num=50)
-        s, bin_edges = np.histogram(connected_components_sizes, bins=bins, density=True)
+        bins = np.geomspace(min_size, max_size, num=30)
+        counts, bin_edges = np.histogram(connected_components_sizes, bins=bins, density=True)
         bins_center = (bin_edges[:-1] + bin_edges[1:]) / 2
+        p_of_s = counts
     else:
-        bins_center, s = np.array(), np.array()
-    print("bins_center : ", bins_center)
-    print("bins : ", s)
-    return bins_center, s
+        bins_center, p_of_s = np.array(), np.array()
+    return p_of_s, bins_center
 
 def fit_linear_regression(p_of_s, s):
 
-    # Filter out s=0 , as log(0) is undefined
-    mask = s > 0
-    print(s)
-    print(p_of_s)
-    filtered_p_of_s = p_of_s[mask]
-    filtered_s = s[mask]
-    slope, intercept, r_value, p_value, std_err = linregress(
-        np.log10(filtered_s),
-        np.log10(filtered_p_of_s)
-    )
-
+    mask = (s > 0) & (p_of_s > 0)
+    masked_s = s[mask]  # log(0) is not defined
+    masked_p_of_s = p_of_s[mask]
+    model = LinearRegression()
+    model.fit(np.log(masked_s.reshape(-1, 1)),
+              np.log(masked_p_of_s))
+    return -model.coef_
     # The slope of the line is the negative of the power law exponent (alpha)
-    alpha = -slope
-    return alpha
 
 def plot_Ps_s(G, pos, p_of_s, s, k_avg, N):
 
@@ -286,21 +278,21 @@ def Finite_Size_Effects(N_list):
         for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_regions):
             average_degree[i].append(k)
             k = round(k, 2)
-            S = get_S(instance_graph, k, N[i])
+            S = get_S(instance_graph, k, N_list[i])
             S_relative_giant_component_size[i].append(S)
             print("------------------------------------------------------------------------")
 
         for k in np.arange(non_critical_region_upper_bound, critical_region_upper_bound, step_size_critical_region):
             average_degree[i].append(k)
             k = round(k, 2)
-            S = get_S(instance_graph, k, N[i])
+            S = get_S(instance_graph, k, N_list[i])
             S_relative_giant_component_size[i].append(S)
             print("------------------------------------------------------------------------")
 
         for k in np.arange(critical_region_upper_bound, average_degree_upper_bound, step_size_non_critical_regions):
             average_degree[i].append(k)
             k = round(k, 2)
-            S = get_S(instance_graph, k, N[i])
+            S = get_S(instance_graph, k, N_list[i])
             S_relative_giant_component_size[i].append(S)
             print("------------------------------------------------------------------------")
 
@@ -329,9 +321,9 @@ def The_Critical_State(N, k_avg):
 #--------------------- main code ---------------------
 
 N_list = [100, 1000, 10000]
-S_relative_giant_component_size, s_average_size_small_clusters, average_degree = Simulating_Network_Evolution(1000)
-Analyzing_the_Critical_Threshold(S_relative_giant_component_size, s_average_size_small_clusters, average_degree)
-Finite_Size_Effects(N_list)
+# S_relative_giant_component_size, s_average_size_small_clusters, average_degree = Simulating_Network_Evolution(1000)
+# Analyzing_the_Critical_Threshold(S_relative_giant_component_size, s_average_size_small_clusters, average_degree)
+# Finite_Size_Effects(N_list)
 The_Critical_State(10000, 1)
 
 
