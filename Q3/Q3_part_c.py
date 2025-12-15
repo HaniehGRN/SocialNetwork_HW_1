@@ -80,6 +80,13 @@ def S_k_plot(S, k, N):
     plt.title('\nS vs. k\n', fontweight='bold')
     plt.show()
 
+def get_slope_near_critical_point(x, y):
+    print(f'x : {x}, y : {y}')
+    model = LinearRegression()
+    model.fit(np.log(x.reshape(-1, 1)),
+              np.log(y))
+    return model.coef_
+
 def compare_theoretical_practical_giant_component_size_critical(instance_graph, k, N):
     G, pos = instance_graph.random_network(N, k)
     giant_component, giant_component_size = get_giant_component(G)
@@ -161,7 +168,7 @@ S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006), np.fl
 # S.append(S2)
 # print(len(S0), len(S1), len(S2))
 # node_num_list = [100, 1000, 10000]
-# k = np.array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1., 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4., 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9])
+k = np.array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1., 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4., 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9])
 # print(len(k))
 # # print(S0)
 # # print(S1)
@@ -169,4 +176,13 @@ S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006), np.fl
 # # print(S)
 # S_k_plot(S, k, node_num_list)
 
-compare_theoretical_practical_giant_component_size_critical(instance_graph, 1, 10000)
+# compare_theoretical_practical_giant_component_size_critical(instance_graph, 1, 10000)
+
+k_start = 0.9
+i_start = 13
+k_end = 1.1
+i_end = 23
+
+print(get_slope_near_critical_point(k[i_start:i_end], S0[i_start:i_end]))
+print(get_slope_near_critical_point(k[i_start:i_end], S1[i_start:i_end]))
+print(get_slope_near_critical_point(k[i_start:i_end], S2[i_start:i_end]))

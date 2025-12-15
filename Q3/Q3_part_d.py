@@ -21,37 +21,37 @@ def logarithmic_binning(connected_components_sizes):
         max_size = np.max(connected_components_sizes)
         bins = np.geomspace(min_size, max_size, num=50)
 
-        # Calculate histogram counts and bin edges with density normalization
-        counts, bin_edges = np.histogram(connected_components_sizes, bins=bins, density=True)
+        # Calculate histogram s and bin edges with density normalization
+        s, bin_edges = np.histogram(connected_components_sizes, bins=bins, density=True)
 
         # Calculate the center of each bin for plotting the x-value (s)
         bins_center = (bin_edges[:-1] + bin_edges[1:]) / 2
     else:
         # Handle edge case where no components exist
-        bins_center, counts = np.array(), np.array()
+        bins_center, s = np.array(), np.array()
 
-    return bins_center, counts
+    return bins_center, s
 
-def fit_linear_regression(bins_center, counts):
+def fit_linear_regression(p_of_s, s):
 
-    # Filter out any bins with 0 counts, as log(0) is undefined
-    mask = counts > 0
-    filtered_bins_center = bins_center[mask]
-    filtered_counts = counts[mask]
-    print(filtered_bins_center)
-    print(filtered_counts)
+    # Filter out any bins with 0 s, as log(0) is undefined
+    mask = s > 0
+    filtered_p_of_s = p_of_s[mask]
+    filtered_s = s[mask]
+    print(filtered_p_of_s)
+    print(filtered_s)
 
     # Optional: Further filter to only include the "tail" region you suspect is power-law
     # Example: Only consider s_values greater than 5
-    tail_mask = filtered_bins_center > 5
-    s_tail = filtered_bins_center[tail_mask]
-    counts_tail = filtered_counts[tail_mask]
+    tail_mask = filtered_p_of_s > 5
+    s_tail = filtered_p_of_s[tail_mask]
+    s_tail = filtered_s[tail_mask]
 
     # Perform Linear Regression on the LOG-TRANSFORMED data
     # We fit log(P(s)) against log(s)
     slope, intercept, r_value, p_value, std_err = linregress(
-        np.log(filtered_bins_center),
-        np.log(filtered_counts)
+        np.log(filtered_p_of_s),
+        np.log(filtered_s)
     )
 
     # The slope of the line is the negative of the power law exponent (alpha)
@@ -65,20 +65,20 @@ N = 10000 # must be 10000
 G, pos = instance_graph.random_network(N, k_avg)
 connected_components = get_connected_components(G)
 connected_components_sizes = np.array([len(connected_component) for connected_component in connected_components])
-bins_center , counts = logarithmic_binning(connected_components_sizes)
+p_of_s , s = logarithmic_binning(connected_components_sizes)
 
-print(bins_center)
-print(counts)
+print(p_of_s)
+print(s)
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 # plt.figure(figsize=(12, 6))
-ax1.loglog(bins_center, counts, 'o', markersize=5)
+ax1.plot(np.log10(p_of_s), np.log10(s), 'o', markersize=5)
 ax1.set_xlabel('s')
 ax1.set_ylabel('P(s)')
 ax1.set_title(f'\nComponent Size Distribution at Critical Point (N={N}, $\\langle k \\rangle = {k_avg}$)\n', fontsize=12, fontweight="bold")
 
 
-alpha, r_value = fit_linear_regression(bins_center, counts)
+alpha, r_value = fit_linear_regression(p_of_s, s)
 
 print(f"Calculated exponent (alpha): {alpha:.4f}")
 print(f"R-squared value (goodness of fit): {r_value ** 2:.4f}")
@@ -113,8 +113,8 @@ fig.tight_layout()
 # print(pos)
 # print(G.edges())
 
-
-# bins_center = [  1.06253654   1.19543125   1.34494752   1.51316424   1.70242035
+#
+# p_of_s = [  1.06253654   1.19543125   1.34494752   1.51316424   1.70242035
 #    1.9153473    2.15490568   2.42442636   2.72765683   3.06881326
 #    3.45263918   3.88447138   4.37031417   4.91692281   5.53189747
 #    6.22378891   7.00221734   7.87800621   8.86333268   9.97189697
@@ -125,7 +125,7 @@ fig.tight_layout()
 #  118.46038955 133.27659496 149.94590876 168.70010492 189.79994611
 #  213.53880935 240.24676526 270.29516738 304.10181562]
 
-# counts = [5.94982277e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00
+# s = [5.94982277e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00
 #  0.00000000e+00 5.77637260e-01 0.00000000e+00 0.00000000e+00
 #  0.00000000e+00 1.34290420e-01 0.00000000e+00 5.32662222e-02
 #  0.00000000e+00 2.50401865e-02 0.00000000e+00 1.15396567e-02
@@ -142,19 +142,19 @@ fig.tight_layout()
 # Calculated exponent (alpha): 2.3894
 # R-squared value (goodness of fit): 0.9208
 
-print("bins center : ", bins_center)
-print("counts : ", counts)
-temp = np.power(counts, -alpha)
+print("bins center : ", p_of_s)
+print("s : ", s)
+temp = np.power(s, -alpha)
 temp[np.isinf(temp)] = np.nan
 print("s^-alpha : ", temp)
 
 fig2, (ax3, ax4) = plt.subplots(1, 2, figsize=(12, 6))
 # ax3 = fig2.add_subplot(111)
-ax3.plot(bins_center, counts, color='orange', marker='o')
+ax3.plot(p_of_s, s, color='orange', marker='o')
 ax3.set_xlabel('s')
 ax3.set_ylabel('P(s)')
 ax3.set_title("P(s) vs. s")
-ax4.plot(bins_center, temp, color='blue', marker='x')
+ax4.plot(p_of_s, temp, color='blue', marker='x')
 ax4.set_xlabel('s')
 ax4.set_ylabel('s^α')
 ax4.set_title("s^α vs. s")
@@ -162,3 +162,27 @@ ax4.set_title("s^α vs. s")
 ax4.set_aspect('equal', adjustable='box')
 plt.show()
 
+#
+# s = [
+#     5.94982277, 0.0, 0.0, 0.0, 0.0, 0.57763726, 0.0, 0.0, 0.0, 0.13429042,
+#     0.0, 0.0532662222, 0.0, 0.0250401865, 0.0, 0.0115396567, 0.00610524188,
+#     0.00434122334, 0.00192930727, 0.00171482841, 0.00182903149, 0.00162570017,
+#     0.00156538737, 0.000107028082, 0.000475649466, 0.000507326476,
+#     0.000450927577, 0.000400798478, 0.000118747391, 5.27731902e-05,
+#     0.000234532278, 0.000125075757, 3.70570764e-05, 6.58749679e-05,
+#     2.92758618e-05, 2.6021298e-05, 0.0, 4.11147343e-05, 0.0, 0.0, 0.0,
+#     0.0, 0.0, 2.02727701e-05, 9.00953481e-06, 0.0, 0.0, 0.0, 5.62314703e-06
+# ]
+#
+# p_of_s = [
+#     1.06253654, 1.19543125, 1.34494752, 1.51316424, 1.70242035, 1.9153473,
+#     2.15490568, 2.42442636, 2.72765683, 3.06881326, 3.45263918, 3.88447138,
+#     4.37031417, 4.91692281, 5.53189747, 6.22378891, 7.00221734, 7.87800621,
+#     8.86333268, 9.97189697, 11.21911281, 12.62232177, 14.20103439,
+#     15.97720145, 17.9755192, 20.22377269, 22.75322217, 25.59903767,
+#     28.80078808, 32.40299126, 36.45573307, 41.01536378, 46.14528152,
+#     51.91681386, 58.41020951, 65.71575413, 73.9350257, 83.18230685,
+#     93.58617391, 105.29128462, 118.46038955, 133.27659496, 149.94590876,
+#     168.70010492, 189.79994611, 213.53880935, 240.24676526, 270.29516738,
+#     304.10181562
+# ]
