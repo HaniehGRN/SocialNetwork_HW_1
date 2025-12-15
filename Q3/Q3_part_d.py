@@ -34,30 +34,21 @@ def logarithmic_binning(connected_components_sizes):
 
 def fit_linear_regression(p_of_s, s):
 
-    # Filter out any bins with 0 s, as log(0) is undefined
+    # Filter out s=0 , as log(0) is undefined
     mask = s > 0
     filtered_p_of_s = p_of_s[mask]
     filtered_s = s[mask]
-    print(filtered_p_of_s)
-    print(filtered_s)
-
-    # Optional: Further filter to only include the "tail" region you suspect is power-law
-    # Example: Only consider s_values greater than 5
     tail_mask = filtered_p_of_s > 5
-    s_tail = filtered_p_of_s[tail_mask]
+    p_of_s_tail = filtered_p_of_s[tail_mask]
     s_tail = filtered_s[tail_mask]
-
-    # Perform Linear Regression on the LOG-TRANSFORMED data
-    # We fit log(P(s)) against log(s)
     slope, intercept, r_value, p_value, std_err = linregress(
-        np.log(filtered_p_of_s),
-        np.log(filtered_s)
+        np.log(s_tail),
+        np.log(p_of_s_tail)
     )
 
     # The slope of the line is the negative of the power law exponent (alpha)
     alpha = -slope
-    return alpha, r_value
-
+    return alpha
 
 instance_graph = Graph()
 k_avg = 1
@@ -71,7 +62,6 @@ print(p_of_s)
 print(s)
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-# plt.figure(figsize=(12, 6))
 ax1.plot(np.log10(p_of_s), np.log10(s), 'o', markersize=5)
 ax1.set_xlabel('s')
 ax1.set_ylabel('P(s)')
@@ -82,17 +72,6 @@ alpha, r_value = fit_linear_regression(p_of_s, s)
 
 print(f"Calculated exponent (alpha): {alpha:.4f}")
 print(f"R-squared value (goodness of fit): {r_value ** 2:.4f}")
-
-# G_nodes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
-# # pos = {0: array([ 0.75347259, -0.0153215 ]), 1: array([ 0.09444954, -0.59704418]), 2: array([-0.90629635, -0.15051983]), 3: array([-0.0393113 ,  0.82702164]), 4: array([-0.64450894,  0.33024337]), 5: array([-0.13647361,  0.56081476]), 6: array([ 0.20828349, -0.88148394]), 7: array([ 0.16260254, -0.8708338 ]), 8: array([-0.49642303,  0.70815326]), 9: array([ 0.18974051, -0.87247935]), 10: array([-0.05440422, -0.79062113]), 11: array([-0.62772645,  0.28851656]), 12: array([-0.10560264,  0.9083667 ]), 13: array([-0.07288031, -0.00871102]), 14: array([ 0.61017551, -0.53938494]), 15: array([ 0.40191168, -0.87211174]), 16: array([-0.88271342,  0.4426374 ]), 17: array([0.56594466, 0.46864864]), 18: array([-0.13397595, -0.01177476]), 19: array([ 0.8356385 , -0.34328166]), 20: array([-0.85578892,  0.39846785]), 21: array([-0.68483469,  0.21520775]), 22: array([-0.8196818 ,  0.43213474]), 23: array([-0.03536404, -0.62098023]), 24: array([ 0.12997686, -0.94047896]), 25: array([0.93847656, 0.37297952]), 26: array([ 0.13453271, -0.060366  ]), 27: array([0.06974948, 0.96704642]), 28: array([-0.77367992, -0.65504008]), 29: array([-0.9494695 , -0.32280963]), 30: array([0.56724126, 0.42681324]), 31: array([ 0.85278697, -0.4397332 ]), 32: array([-0.64534155,  0.6089307 ]), 33: array([-0.68702649,  0.70686747]), 34: array([-0.59038471,  0.85696483]), 35: array([-0.09706405,  0.57227701]), 36: array([-0.38833725,  0.88935431]), 37: array([0.69572499, 0.6153071 ]), 38: array([ 0.52413786, -0.866291  ]), 39: array([-0.28525251, -0.92244322]), 40: array([-0.01382466, -0.14343767]), 41: array([0.0092457 , 0.04031722]), 42: array([-0.73198116,  0.20376941]), 43: array([0.35288605, 0.82465629]), 44: array([ 0.92887614, -0.18526472]), 45: array([-0.09669783, -0.01196331]), 46: array([0.88752759, 0.24905747]), 47: array([-0.03992325,  0.7813803 ]), 48: array([0.81015817, 0.16036642]), 49: array([-0.01655991, -0.69344737]), 50: array([-0.96754849,  0.22977142]), 51: array([-0.64014913, -0.58719159]), 52: array([ 0.05093926, -0.60018337]), 53: array([-0.00050372, -0.08430532]), 54: array([-0.05543552, -0.05402898]), 55: array([-0.64933437, -0.72727224]), 56: array([0.84328359, 0.54649706]), 57: array([0.26529672, 0.92088548]), 58: array([ 0.63516973, -0.75792869]), 59: array([ 0.20203782, -0.07080164]), 60: array([0.5472617 , 0.51854039]), 61: array([-0.02864903, -0.18829121]), 62: array([-0.81650202, -0.44650699]), 63: array([0.48783291, 0.85136501]), 64: array([-1.        , -0.06973734]), 65: array([-0.18014294, -0.91730296]), 66: array([-0.63901154,  0.24128925]), 67: array([ 0.77992846, -0.04290349]), 68: array([0.14966489, 0.88193266]), 69: array([-0.3600722 ,  0.91201403]), 70: array([ 0.89186361, -0.05970575]), 71: array([ 0.41956624, -0.73575025]), 72: array([-0.79664931, -0.3401737 ]), 73: array([ 0.00498391, -0.63165201]), 74: array([-0.86033975, -0.52603648]), 75: array([ 0.82490502, -0.56646045]), 76: array([-0.83502308,  0.41256869]), 77: array([0.61192766, 0.47248137]), 78: array([ 0.61279795, -0.50664228]), 79: array([-0.38614446,  0.84572259]), 80: array([-0.05642074,  0.56703457]), 81: array([0.68298803, 0.53970869]), 82: array([-0.90191261, -0.1182488 ]), 83: array([-0.55205495, -0.78292605]), 84: array([-0.98887975,  0.08387454]), 85: array([ 0.05642455, -0.05024312]), 86: array([ 0.25635466, -0.08026914]), 87: array([ 0.82125566, -0.06508661]), 88: array([ 0.82623821, -0.10692836]), 89: array([ 0.76212625, -0.69489404]), 90: array([-0.4429726 , -0.86167583]), 91: array([0.64674676, 0.78046205]), 92: array([-0.10613929,  0.61979715]), 93: array([0.7123336 , 0.58149575]), 94: array([-0.03715519, -0.74845129]), 95: array([-0.77857489, -0.31366576]), 96: array([ 0.94800591, -0.05649811]), 97: array([-0.41805751, -0.81308708]), 98: array([0.54710032, 0.5667099 ]), 99: array([-0.00137128, -0.0077788 ])}
-# G_edges = [(0, 67), (1, 52), (2, 82), (3, 47), (4, 11), (5, 35), (6, 7), (10, 94), (11, 66), (13, 18), (13, 45), (13, 99), (14, 78), (16, 76), (17, 30), (17, 60), (17, 77), (20, 22), (21, 42), (21, 66), (23, 73), (26, 59), (26, 85), (35, 80), (35, 92), (36, 69), (36, 79), (37, 93), (40, 53), (40, 61), (41, 99), (45, 54), (49, 73), (49, 94), (52, 73), (53, 54), (53, 85), (59, 86), (60, 98), (67, 87), (70, 87), (70, 96), (72, 95), (81, 93), (85, 99), (87, 88), (90, 97)]
-
-# G = nx.Graph()
-# G.add_nodes_from(G_nodes)
-# pos = nx.spring_layout(G, seed=42)
-# G.add_edges_from(G_edges)
-
-# plt1 = plt.figure(figsize=(12, 6))
 
 nx.draw(
         G,
@@ -144,23 +123,7 @@ fig.tight_layout()
 
 print("bins center : ", p_of_s)
 print("s : ", s)
-temp = np.power(s, -alpha)
-temp[np.isinf(temp)] = np.nan
-print("s^-alpha : ", temp)
 
-fig2, (ax3, ax4) = plt.subplots(1, 2, figsize=(12, 6))
-# ax3 = fig2.add_subplot(111)
-ax3.plot(p_of_s, s, color='orange', marker='o')
-ax3.set_xlabel('s')
-ax3.set_ylabel('P(s)')
-ax3.set_title("P(s) vs. s")
-ax4.plot(p_of_s, temp, color='blue', marker='x')
-ax4.set_xlabel('s')
-ax4.set_ylabel('s^α')
-ax4.set_title("s^α vs. s")
-# fig2.legend()
-ax4.set_aspect('equal', adjustable='box')
-plt.show()
 
 #
 # s = [

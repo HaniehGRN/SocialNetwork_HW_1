@@ -96,30 +96,8 @@ def compare_theoretical_practical_giant_component_size_critical(instance_graph, 
 
 # average_degree = []
 # S_relative_giant_component_size = []
-instance_graph = Graph()
-# N = 10000
 
-# for k in np.arange(average_degree_lower_bound, non_critical_region_upper_bound, step_size_non_critical_regions):
-#     k = round(k, 2)
-#     get_S(instance_graph, k, N)
-#     print("------------------------------------------------------------------------")
 
-# for k in np.arange(non_critical_region_upper_bound, critical_region_upper_bound, step_size_critical_region):
-#     k = round(k, 2)
-#     get_S(instance_graph, k, N)
-#     print("------------------------------------------------------------------------")
-
-# for k in np.arange(critical_region_upper_bound, average_degree_upper_bound, step_size_non_critical_regions):
-#     k = round(k, 2)
-#     get_S(instance_graph, k, N)
-#     print("------------------------------------------------------------------------")
-
-# S_relative_giant_component_size = np.array(S_relative_giant_component_size)
-# average_degree = np.array(average_degree)
-# print("S_relative_giant_component_size : ", S_relative_giant_component_size)
-# print("average_degree : ", average_degree)
-# plt.plot(average_degree, S_relative_giant_component_size, label=f'N = {N}')
-# plt.legend(loc='upper right')
 
 S0 = np.array([0.01, 0.0246, 0.032, 0.041, 0.0472, 0.0658, 0.0824, 0.0948,
                0.1162, 0.1288, 0.1488, 0.1498, 0.141, 0.1694, 0.172, 0.1758,
@@ -160,23 +138,9 @@ S2 = np.array([np.float64(0.0001), np.float64(0.0006), np.float64(0.0006), np.fl
       np.float64(0.9867), np.float64(0.9878), np.float64(0.9913),
       np.float64(0.9916), np.float64(0.9926), np.float64(0.9921),
       ])
-#
-# S = []
-# # print(len(S1))
-# S.append(S0)
-# S.append(S1)
-# S.append(S2)
-# print(len(S0), len(S1), len(S2))
-# node_num_list = [100, 1000, 10000]
-k = np.array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1., 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4., 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9])
-# print(len(k))
-# # print(S0)
-# # print(S1)
-# # print(S2)
-# # print(S)
-# S_k_plot(S, k, node_num_list)
 
-# compare_theoretical_practical_giant_component_size_critical(instance_graph, 1, 10000)
+k = np.array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.82, 0.84, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1., 1.02, 1.04, 1.06, 1.08, 1.1, 1.12, 1.14, 1.16, 1.18, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4., 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9])
+
 
 k_start = 0.9
 i_start = 13
