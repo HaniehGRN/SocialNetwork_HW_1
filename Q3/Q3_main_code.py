@@ -50,9 +50,9 @@ def plot_components(G, pos, giant_component, small_clusters):
         G,
         pos,
         ax=ax1,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=30,  # Smaller nodes
-        width=0.5,  # Thinner edges
+        with_labels=False,
+        node_size=30,
+        width=0.5,
         edge_color="gray",
         node_color="skyblue",
     )
@@ -60,9 +60,9 @@ def plot_components(G, pos, giant_component, small_clusters):
         giant_component,
         pos,
         ax=ax1,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=30,  # Smaller nodes
-        width=0.5,  # Thinner edges
+        with_labels=False,
+        node_size=30,
+        width=0.5,
         edge_color="black",
         node_color="red",
     )
@@ -72,9 +72,9 @@ def plot_components(G, pos, giant_component, small_clusters):
         giant_component,
         pos,
         ax=ax2,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=30,  # Smaller nodes
-        width=0.5,  # Thinner edges
+        with_labels=False,
+        node_size=30,
+        width=0.5,
         edge_color="black",
         node_color="red",
     )
@@ -84,9 +84,9 @@ def plot_components(G, pos, giant_component, small_clusters):
         small_clusters,
         pos,
         ax=ax3,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=30,  # Smaller nodes
-        width=0.5,  # Thinner edges
+        with_labels=False,
+        node_size=30,
+        width=0.5,
         edge_color="black",
         node_color="red",
     )
@@ -206,8 +206,8 @@ def fit_linear_regression(p_of_s, s):
     filtered_p_of_s = p_of_s[mask]
     filtered_s = s[mask]
     slope, intercept, r_value, p_value, std_err = linregress(
-        filtered_s,
-        filtered_p_of_s
+        np.log10(filtered_s),
+        np.log10(filtered_p_of_s)
     )
 
     # The slope of the line is the negative of the power law exponent (alpha)
@@ -217,7 +217,7 @@ def fit_linear_regression(p_of_s, s):
 def plot_Ps_s(G, pos, p_of_s, s, k_avg, N):
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-    ax1.plot(np.log(s),np.log(p_of_s), 'o', markersize=5)
+    ax1.plot(np.log10(s),np.log10(p_of_s), 'o', markersize=5)
     ax1.set_xlabel('s')
     ax1.set_ylabel('P(s)')
     ax1.set_title(f'\nComponent Size Distribution at Critical Point (N={N}, $\\langle k \\rangle = {k_avg}$)\n',
@@ -226,9 +226,9 @@ def plot_Ps_s(G, pos, p_of_s, s, k_avg, N):
         G,
         pos,
         ax=ax2,
-        with_labels=False,  # Don't show node labels for clarity
-        node_size=20,  # Smaller nodes
-        width=0.3,  # Thinner edges
+        with_labels=False,
+        node_size=20,
+        width=0.3,
         edge_color="black",
         node_color="red",
     )
@@ -276,7 +276,7 @@ def Simulating_Network_Evolution(N):
 def Analyzing_the_Critical_Threshold(S_relative_giant_component_size, s_average_size_small_clusters, average_degree):
     plot_S_and_s(S_relative_giant_component_size, s_average_size_small_clusters, average_degree)
 
-def Finite_Size_Effects(N_list, N):
+def Finite_Size_Effects(N_list):
 
     average_degree = [[], [], []]
     S_relative_giant_component_size = [[], [], []]
@@ -328,9 +328,10 @@ def The_Critical_State(N, k_avg):
 
 #--------------------- main code ---------------------
 
-# S_relative_giant_component_size, s_average_size_small_clusters, average_degree = Simulating_Network_Evolution(N)
-# Analyzing_the_Critical_Threshold(S_relative_giant_component_size, s_average_size_small_clusters)
-# Finite_Size_Effects()
+N_list = [100, 1000, 10000]
+S_relative_giant_component_size, s_average_size_small_clusters, average_degree = Simulating_Network_Evolution(1000)
+Analyzing_the_Critical_Threshold(S_relative_giant_component_size, s_average_size_small_clusters, average_degree)
+Finite_Size_Effects(N_list)
 The_Critical_State(10000, 1)
 
 

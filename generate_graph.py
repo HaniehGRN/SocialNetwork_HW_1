@@ -30,6 +30,5 @@ class Graph:
     def random_network(N, k_avg):
         p = k_avg / (N - 1)
         G = nx.fast_gnp_random_graph(N, p, directed=False)
-        # is_connected = nx.is_connected(G)
         pos = nx.spring_layout(G, seed=42)
         return G, pos
